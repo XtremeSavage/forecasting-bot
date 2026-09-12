@@ -1,0 +1,8 @@
+H0 (status quo): No announcement by the deadline.
+H1: Announcement happens.
+Evidence table check: E1 supports H1 weakly (C3). E2 supports H0 (B2).
+What must change: an official statement within 19 days.
+FINAL: 0.18
+```json
+{"probability": 0.18}
+```

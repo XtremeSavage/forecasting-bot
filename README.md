@@ -29,6 +29,21 @@ Plan:
 - **Sep 21 to Sep 27: Tradecraft layer v1 on the warmup MiniBench.** Build the analytic pipeline and guards. Log everything.
 - **Sep 28 onward: Live, then iterate.** Compare against the bot community prediction, analyze MiniBench results every two weeks, change one thing at a time.
 
+## How to run
+
+Local (Python 3.12 venv at `.venv`):
+
+```
+.venv/Scripts/python.exe -m pytest -q                 # tests, no network
+.venv/Scripts/python.exe run.py --mode dry --limit 1  # full pipeline, no publish
+.venv/Scripts/python.exe run.py --mode test           # publish to bot-testing-area
+.venv/Scripts/python.exe control_bot.py --mode test_questions
+```
+
+GitHub Actions: `Main bot on tournament` every 20 min (Fall + MiniBench), `Main bot on Metaculus Cup` every 2 days, `Control bot` workflows on the same cadence with the control token, `Test bot` manual. Records land in `runs/YYYY-MM-DD/` and are committed automatically.
+
+Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULUS_TOKEN_CONTROL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`, `ASKNEWS_CLIENT_ID`, `ASKNEWS_SECRET`.
+
 ## Background research (as of 2026-09-10)
 
 ### Tournament facts

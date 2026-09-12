@@ -8,6 +8,14 @@ The bot is built, reviewed, and tested offline, and has never made a paid or liv
 
 ## What to do next, in order
 
+0. **Push the real branches (2 minutes, XtremeSavageXD).** The repo https://github.com/XtremeSavage/forecasting-bot exists and is public, but the GitHub CLI token was created without the `workflow` scope, so GitHub rejected every push that contains `.github/workflows/`. Only a backup branch `snapshot-no-workflows` made it up. Fix from the project folder, in the Claude Code prompt:
+   ```
+   ! "C:\Program Files\GitHub CLI\gh.exe" auth refresh -h github.com -s workflow
+   ! git push -u origin main
+   ! git push -u origin build/v1
+   ```
+   Then delete the snapshot branch on GitHub. Nothing else in this list works until `main` is on GitHub.
+
 1. **Accounts (XtremeSavageXD).** OpenRouter key with a spend limit. AskNews registration for the bot email. Second Metaculus bot account `XtremeSavageForecast-v2` for the control bot and its token. Metaculus participation form (3 questions, also the credit request). Discord `build-a-forecasting-bot`.
 2. **Secrets (XtremeSavageXD).** In the GitHub repo: `METACULUS_TOKEN`, `METACULUS_TOKEN_CONTROL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`, `ASKNEWS_CLIENT_ID`, `ASKNEWS_SECRET`. Locally, copy `.env.template` to `.env` and fill it in. Never paste keys into chat.
 3. **Before the dry run**, add `workflow_dispatch:` to `.github/workflows/control_cup.yaml` (see residuals below).

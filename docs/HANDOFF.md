@@ -4,22 +4,23 @@ Written 2026-09-12 at the end of an overnight autonomous build session. Read thi
 
 ## One-paragraph status
 
-The bot is built, reviewed, and tested offline, and has never made a paid or live call. Branch `build/v1` holds 23 commits on top of the docs-only `master`. 58 pytest tests pass with zero warnings. Every piece of the spec exists: config, typed records, LLM wrapper with exact OpenRouter cost accounting and Anthropic fallback, aggregation math, guards and budgets, five tradecraft stages, research providers, comment builder, run records, the pipeline with a publish gate, the CLI, the unmodified Metaculus template as a control bot, GitHub Actions workflows for both bots, a score joiner, and a static dashboard. What has not happened: no dry run against a real question, no live submission, no GitHub secrets, no Pages enabled. Those are gated on XtremeSavageXD.
+The bot is built, reviewed, and tested offline, and has never made a paid or live call. Branch `build/v1` holds 28 commits on top of the docs-only base and has been merged to `main`. 89 pytest tests pass with zero warnings. Every piece of the spec exists: config, typed records, LLM wrapper with exact OpenRouter cost accounting and Anthropic fallback, aggregation math, guards and budgets, five tradecraft stages, research providers, comment builder, run records, the pipeline with a publish gate, the CLI, the unmodified Metaculus template as a control bot, GitHub Actions workflows for both bots, a score joiner, and a static dashboard. What has not happened: no dry run against a real question, no live submission, no GitHub secrets, no Pages enabled. Those are gated on XtremeSavageXD.
 
 ## What to do next, in order
 
 1. **Accounts (XtremeSavageXD).** OpenRouter key with a spend limit. AskNews registration for the bot email. Second Metaculus bot account `XtremeSavageForecast-v2` for the control bot and its token. Metaculus participation form (3 questions, also the credit request). Discord `build-a-forecasting-bot`.
 2. **Secrets (XtremeSavageXD).** In the GitHub repo: `METACULUS_TOKEN`, `METACULUS_TOKEN_CONTROL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`, `ASKNEWS_CLIENT_ID`, `ASKNEWS_SECRET`. Locally, copy `.env.template` to `.env` and fill it in. Never paste keys into chat.
-3. **First paid dry run (with XtremeSavageXD's go).** From the project folder:
+3. **Before the dry run**, add `workflow_dispatch:` to `.github/workflows/control_cup.yaml` (see residuals below).
+4. **First paid dry run (with XtremeSavageXD's go).** From the project folder:
    ```
    .venv/Scripts/python.exe run.py --mode dry --limit 1
    ```
    Expected: one bot-testing-area question flows through all five stages, a record lands in `runs/<date>/`, nothing is posted, cost well under $1. Read the record and the comment by hand. Things to check on that first run, because no test could: the OpenRouter `usage.cost` field actually comes back (otherwise cost shows 0), the `:online` web-search model returns cited text, AskNews returns articles, the resolution-source fetch works on a real URL, the four member models all parse (watch `dropped_reason`), and the devil's advocate revision parses.
-4. **Verify the community-prediction key path** in `scores.py` `metaculus_fetch` against one resolved binary question (command is in the plan, Task 13 Step 4). Until then `cp_at_reveal` may be None and `peer_proxy` empty.
-5. **Live on the testing area**: `run.py --mode test` locally or the `Test bot` workflow with mode `test`. Then the control bot's `test_questions` workflow. Confirm both bots' forecasts and private comments appear on their profiles.
-6. **Enable GitHub Pages** (Settings, Pages, source: GitHub Actions) so the dashboard deploys from `docs/dashboard/`.
-7. **Sep 21**: warmup MiniBench. Both `Main bot on tournament` and `Control bot` workflows run every 20 minutes automatically once secrets exist. Watch the first few Actions runs; a run exits non-zero when any guard fires, which emails XtremeSavageXD.
-8. **Sep 28**: Fall tournament opens. Same workflows, no change needed; the tournament ID 33121 is in `config.yaml`.
+5. **Verify the community-prediction key path** in `scores.py` `metaculus_fetch` against one resolved binary question (command is in the plan, Task 13 Step 4). Until then `cp_at_reveal` may be None and `peer_proxy` empty.
+6. **Live on the testing area**: `run.py --mode test` locally or the `Test bot` workflow with mode `test`. Then the control bot's `test_questions` workflow. Confirm both bots' forecasts and private comments appear on their profiles.
+7. **Enable GitHub Pages** (Settings, Pages, source: GitHub Actions) so the dashboard deploys from `docs/dashboard/`.
+8. **Sep 21**: warmup MiniBench. Set the repository variable `BOT_LIVE` to `true` (Settings, Secrets and variables, Actions, Variables); until then the scheduled workflows are inert. Both `Main bot on tournament` and `Control bot` workflows then run every 20 minutes. Watch the first few Actions runs; a run exits non-zero when any guard fires, which emails XtremeSavageXD.
+9. **Sep 28**: Fall tournament opens. Same workflows, no change needed; the tournament ID 33121 is in `config.yaml`.
 
 ## How the code is laid out
 
@@ -28,7 +29,7 @@ The bot is built, reviewed, and tested offline, and has never made a paid or liv
 | `run.py` | CLI. `--mode tournament` (Fall + MiniBench, publish), `cup`, `test` (testing area, publish), `dry` (no publish). Exit 0 clean, 1 if any guard fired, 2 if the $500 season cap is hit. |
 | `bot/pipeline.py` | One question end to end. `forecast_question(q, settings, llm, publisher, today, runs_dir)`. `MetaculusPublisher` posts and re-checks the question is open first. |
 | `bot/stages/` | `forensics`, `base_rate`, `evidence`, `forecast` (ACH, one call per ensemble member), `devils_advocate`, `research` (AskNews, OpenRouter web search, resolution-URL fetch), `common` (shared prompt pieces and JSON parsing). |
-| `bot/llm.py` | OpenRouter via the openai SDK with `usage.include` for exact cost; Anthropic direct fallback for `anthropic/` models; per-call cost ceiling. |
+| `bot/llm.py` | OpenRouter via the openai SDK with `usage.include` for exact cost; on any OpenRouter failure the call falls back to `models.anthropic_fallback` via the Anthropic SDK; per-call cost ceiling. |
 | `bot/aggregate.py` | Logit median for binary, per-option median with floor for MC, pointwise CDF median for numeric via forecasting-tools' `NumericDistribution`. `bounded_logit_shift` limits the devil's-advocate move. |
 | `bot/guards.py` | Member validation and prose/JSON consistency, `Budget`, `season_spent`. |
 | `bot/records.py`, `bot/comment.py` | One JSON record per question per run under `runs/`; the private comment (under 3,000 chars, Final line always kept). |
@@ -61,15 +62,39 @@ Every ruling is also in the build ledger. The ones that matter:
 - The `anthropic` SDK 1.5.0 has no `temperature` argument on `messages.create`; it is passed via `extra_body`. Confirm on the first fallback.
 - The community-prediction key path in `scores.py` is a guess marked UNVERIFIED.
 - Numeric and multiple-choice questions have never been run end to end against the real API. The testing area has one of each type; check those records closely.
-- The `cup.yaml` workflow has no manual trigger.
+- `control_cup.yaml` has no manual trigger (see residuals).
 - Market Pulse, question-group consistency, and prediction-market inputs are out of scope for v1 by design.
 
 ## Where the process artifacts are
 
 - Spec: `docs/superpowers/specs/2026-09-11-forecasting-bot-design.md`
 - Plan: `docs/superpowers/plans/2026-09-11-forecasting-bot.md`
-- Build ledger with every ruling, review verdict, and deferred minor: `.superpowers/sdd/2026-09-11-forecasting-bot/progress.md` (git-ignored, local only; it was copied to `docs/superpowers/ledger-2026-09-12.md` at the end of the session so it survives the folder move).
+- Build ledger with every ruling, review verdict, and deferred minor: `docs/superpowers/ledger-2026-09-12.md`.
 
-## Final whole-branch review
+## Final whole-branch review and fix wave
 
-(filled in at the end of the session; see the section below)
+A senior review of the whole branch found one Critical and ten Important issues; all were fixed in four commits and re-reviewed clean. Test count went from 58 to 89. The headline fixes:
+
+- **Per-question timeout** in `run.py` (`limits.question_wall_clock_s`, default 600 s). Before this, an open-bounded numeric question could hang a whole Actions run with no record written.
+- **Numeric percentile read-back** no longer collapses onto the bound; the aggregate is validated and trial-converted to a CDF before publishing (`AGGREGATE_INVALID` guard); a single member whose distribution cannot be built is dropped instead of killing the question.
+- **Stage isolation**: forensics, blind base rate, and evidence each fail soft (`FORENSICS_FAILED`, `BLIND_FAILED`, `EVIDENCE_FAILED`) and the question continues.
+- **Budget**: roster trimmed to the minimum members when spend nears the cap (`MEMBERS_TRIMMED_BUDGET`); DA skipped when exhausted (`BUDGET_EXHAUSTED`).
+- **Provider fallback** now covers every model: if OpenRouter fails, the call goes to `models.anthropic_fallback` directly.
+- **Research** queries run concurrently with per-query timeouts; partial results are kept; `NO_RESEARCH` guard when nothing came back.
+- **Prompt-injection framing**: fetched source bodies are fenced and declared untrusted in the evidence prompt.
+- **Devil's advocate bounded** for MC (per-option logit shift) and numeric (`forecast.da_max_numeric_fraction` of the p10-p90 spread).
+- **Date questions are skipped** (`SKIP_DATE_UNSUPPORTED`). Fall 2026 uses no date questions; the Metaculus Cup might.
+- **Scheduled workflows are gated** on the repository variable `BOT_LIVE == 'true'`. Merging to main does not start the bot. Manual `workflow_dispatch` runs still work.
+- Minor: comment always fits, `FINAL: 45%` no longer misparsed on percent-unit numeric questions, a failed comment post after a successful prediction is recorded as published with `COMMENT_FAILED`.
+
+Residuals parked for XtremeSavageXD, none blocking:
+
+- `control_cup.yaml` has no manual trigger, so it cannot be rehearsed by hand before `BOT_LIVE` is set. One-line fix: add `workflow_dispatch:` under `on:`.
+- The control workflows do not pass `ANTHROPIC_API_KEY`; the stock template has no fallback route. XtremeSavageXD's call whether the control should get one.
+- During an OpenRouter outage all four ensemble members become the same Anthropic model; `PROVIDER_FALLBACK` records it.
+- A timed-out question's record shows `published=False` with no guard string (the guard is only logged); the question is retried next run.
+- Web search can fan out to 15 concurrent calls (5 queries times 3 questions); watch spend on the first real run.
+- Guard noise: `run.py` exits non-zero on any guard, including routine ones like `PUBLISH_SKIPPED_CLOSED`, so many Actions runs will show red. Consider splitting routine from degradation guards after the first MiniBench round.
+- Re-forecasting: the bot forecasts each question once. Spot scoring rewards the forecast standing at community-prediction reveal, so an update pass near close is a plausible later improvement.
+
+The full ledger of rulings and review verdicts is `docs/superpowers/ledger-2026-09-12.md`; the fix brief is `docs/superpowers/final-fix-brief-2026-09-12.md`.

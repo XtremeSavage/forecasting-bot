@@ -1,0 +1,30 @@
+name: Control bot on Metaculus Cup
+
+on:
+  schedule:
+    - cron: "0 1 */2 * *"
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  forecast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - run: poetry install --no-interaction --no-root
+      - name: Run control bot
+        run: poetry run python control_bot.py --mode metaculus_cup
+        env:
+          METACULUS_TOKEN: ${{ secrets.METACULUS_TOKEN_CONTROL }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          ASKNEWS_CLIENT_ID: ${{ secrets.ASKNEWS_CLIENT_ID }}
+          ASKNEWS_SECRET: ${{ secrets.ASKNEWS_SECRET }}

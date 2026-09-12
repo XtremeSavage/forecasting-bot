@@ -40,6 +40,17 @@ def validate_value(v: ForecastValue, q: QuestionSummary) -> list[str]:
                 problems.append("value below closed lower bound")
             if q.upper_bound is not None and q.open_upper is False and vals[-1] > q.upper_bound:
                 problems.append("value above closed upper bound")
+        # A member can clear every structural check above and still be impossible to turn
+        # into a Metaculus CDF (e.g. a forecast that sits entirely outside the question's
+        # range). Only the library knows the full rule set, so ask it: building the CDF is
+        # the same call the publisher would make, so a member that fails here would have
+        # failed at publish time. Imported lazily because bot.aggregate imports this module.
+        if not problems and v.kind in ("numeric", "discrete") and v.percentiles:
+            from bot.aggregate import percentiles_to_cdf
+            try:
+                percentiles_to_cdf(v.percentiles, q)
+            except Exception as e:  # noqa: BLE001
+                problems.append(f"distribution cannot be built: {type(e).__name__}")
     return problems
 
 

@@ -56,3 +56,20 @@ def test_season_spent(tmp_path):
     (d / "array.json").write_text(json.dumps([1, 2]))
     (d / "bad.json").write_text(json.dumps({"cost_usd": "N/A"}))
     assert season_spent(str(tmp_path)) == 1.0
+
+
+def test_numeric_member_that_cannot_build_a_distribution_is_dropped():
+    # 0..100 question, open on both sides. The bad member forecasts 900..1500, which is
+    # structurally fine (strictly increasing, no closed bound violated) but the library
+    # refuses to build a CDF from it, so it would have exploded at publish time.
+    q = _q("numeric", lower_bound=0.0, upper_bound=100.0, open_lower=True, open_upper=True, cdf_size=201)
+    good = [_m(ForecastValue(kind="numeric", percentiles={10: 10.0 + i, 50: 50.0 + i, 90: 90.0 + i})) for i in range(3)]
+    bad = _m(ForecastValue(kind="numeric", percentiles={5: 900.0, 20: 1100.0, 50: 1200.0, 80: 1400.0, 95: 1500.0}))
+    survivors = drop_invalid_members(good + [bad], q)
+    assert survivors == good
+    assert bad.dropped_reason is not None and "distribution" in bad.dropped_reason
+
+
+def test_valid_numeric_member_still_passes():
+    q = _q("numeric", lower_bound=0.0, upper_bound=100.0, open_lower=True, open_upper=True, cdf_size=201)
+    assert validate_value(ForecastValue(kind="numeric", percentiles={10: 20.0, 50: 50.0, 90: 80.0}), q) == []

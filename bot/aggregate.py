@@ -62,9 +62,26 @@ def _cdf_to_percentiles(cdf: list[float], q: QuestionSummary, targets: list[int]
         lo, hi, zp = q.lower_bound, q.upper_bound, q.zero_point
         ratio = (hi - zp) / (lo - zp)
         xs = np.array([zp + (lo - zp) * ratio ** (i / (n - 1)) for i in range(n)])
-    out = {}
+    # On an open-bounded question the standardized CDF spans only [cdf[0], cdf[-1]]
+    # (mass sits outside the bounds), so asking np.interp for a target outside that
+    # band silently clamps to the axis end. Several percentiles then collapse onto the
+    # same bound value, and the result is no longer a valid distribution: rebuilding a
+    # CDF from it either raises or drives the library's PMF rescaling loop degenerate.
+    # Clip each target into the achievable band first, then repair any remaining ties.
+    lo_h, hi_h = float(cdf[0]), float(cdf[-1])
+    out: dict[int, float] = {}
     for t in targets:
-        out[t] = float(np.interp(t / 100, cdf, xs))
+        t_eff = min(max(t / 100, lo_h + 1e-6), hi_h - 1e-6)
+        out[t] = float(np.interp(t_eff, cdf, xs))
+    span = float(xs[-1] - xs[0])
+    if q.lower_bound is not None and q.upper_bound is not None:
+        span = q.upper_bound - q.lower_bound
+    step = max(1e-9 * span, abs(span) * 1e-6)
+    prev: float | None = None
+    for t in sorted(out):  # walk in percentile order, bumping ties to keep it strictly increasing
+        if prev is not None and out[t] <= prev:
+            out[t] = prev + step
+        prev = out[t]
     return out
 
 
@@ -79,6 +96,31 @@ def bounded_logit_shift(old_p: float, new_p: float, max_shift: float) -> float:
     lo, ln = logit(old_p), logit(new_p)
     delta = max(-max_shift, min(max_shift, ln - lo))
     return sigmoid(lo + delta)
+
+
+def bounded_percentile_shift(pre: dict[int, float], revised: dict[int, float], max_fraction: float) -> dict[int, float]:
+    """Cap a devil's-advocate numeric revision to a fraction of the pre-DA p90-p10 spread.
+
+    Each percentile present in both dicts may move at most `max_fraction * spread`;
+    percentiles the reviser dropped keep their pre-DA value. A zero (or undefined)
+    spread gives no scale to bound against, so the raw revision is returned and the
+    caller validates it instead.
+    """
+    if not pre:
+        return dict(revised)
+    lo = pre.get(10, min(pre.values()))
+    hi = pre.get(90, max(pre.values()))
+    spread = hi - lo
+    if spread <= 0:
+        return dict(revised)
+    cap = abs(max_fraction) * spread
+    out = dict(pre)
+    for k, new_v in revised.items():
+        if k not in pre:
+            continue
+        old_v = pre[k]
+        out[k] = old_v + max(-cap, min(cap, new_v - old_v))
+    return out
 
 
 def aggregate(values: list[ForecastValue], q: QuestionSummary, cfg: ForecastCfg) -> ForecastValue:

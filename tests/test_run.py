@@ -34,3 +34,23 @@ async def test_run_handles_forecast_question_exception(tmp_path, monkeypatch):
     args = run.parse_args(["--mode", "dry", "--runs-dir", str(tmp_path)])
     code = await run._run(args)
     assert code == 1
+
+
+async def test_run_times_out_a_wedged_question(tmp_path, monkeypatch):
+    """A question that never finishes must not hold the whole run open."""
+    import asyncio
+    from bot.config import load_settings
+
+    s = load_settings("config.yaml")
+    s.limits.question_wall_clock_s = 0.05
+
+    async def never_finishes(*args, **kwargs):
+        await asyncio.sleep(30)
+
+    monkeypatch.setattr(run, "load_settings", lambda path: s)
+    monkeypatch.setattr(run, "forecast_question", never_finishes)
+    monkeypatch.setattr(run, "MetaculusClient", _FakeMetaculusClient)
+
+    args = run.parse_args(["--mode", "dry", "--runs-dir", str(tmp_path)])
+    code = await asyncio.wait_for(run._run(args), timeout=10)
+    assert code == 1  # the timeout counts as a guard

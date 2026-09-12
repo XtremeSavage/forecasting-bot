@@ -55,7 +55,17 @@ async def _run(args) -> int:
         nonlocal guards
         async with sem:
             try:
-                rec = await forecast_question(q, s, Llm(s), publisher, today, args.runs_dir)
+                # Hard per-question wall clock. Without it a single wedged provider call
+                # (or a pathological numeric distribution) blocks the whole run, and the
+                # run has a fixed window before the question closes.
+                rec = await asyncio.wait_for(
+                    forecast_question(q, s, Llm(s), publisher, today, args.runs_dir),
+                    timeout=s.limits.question_wall_clock_s,
+                )
+            except asyncio.TimeoutError:
+                log.error("QUESTION_TIMEOUT after %ss for post %s", s.limits.question_wall_clock_s, getattr(q, "id_of_post", "?"))
+                guards += 1
+                return
             except Exception:
                 log.exception("forecast_question failed for post %s", getattr(q, "id_of_post", "?"))
                 guards += 1

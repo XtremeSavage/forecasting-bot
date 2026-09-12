@@ -1,15 +1,15 @@
 import pytest
 from bot.aggregate import (logit, sigmoid, aggregate_binary, aggregate_mc, aggregate_numeric,
-                           bounded_logit_shift, aggregate, percentiles_to_cdf)
+                           bounded_logit_shift, bounded_percentile_shift, aggregate, percentiles_to_cdf)
 from bot.models import ForecastValue, QuestionSummary
 from bot.config import ForecastCfg
 
 
-def _q(kind="numeric", lo=0.0, hi=100.0, open_lo=False, open_hi=False, cdf_size=201):
+def _q(kind="numeric", lo=0.0, hi=100.0, open_lo=False, open_hi=False, cdf_size=201, zero_point=None):
     return QuestionSummary(post_id=1, question_id=1, url="u", title="t", kind=kind, close_time=None,
                            options=["A", "B", "C"] if kind == "multiple_choice" else None,
                            lower_bound=lo, upper_bound=hi, open_lower=open_lo, open_upper=open_hi,
-                           cdf_size=cdf_size, zero_point=None, unit=None)
+                           cdf_size=cdf_size, zero_point=zero_point, unit=None)
 
 
 def test_logit_roundtrip():
@@ -65,3 +65,60 @@ def test_aggregate_dispatch():
     cfg = ForecastCfg()
     v = aggregate([ForecastValue(kind="binary", probability=0.2), ForecastValue(kind="binary", probability=0.4)], _q("binary"), cfg)
     assert v.kind == "binary" and 0.2 < v.probability < 0.4
+
+
+SPREAD_MEMBER = {5: -40.0, 10: -20.0, 20: 0.0, 40: 20.0, 60: 40.0, 80: 60.0, 90: 80.0, 95: 95.0}
+PCTS = [5, 10, 20, 40, 60, 80, 90, 95]
+
+
+def test_open_bounds_do_not_collapse_percentiles_onto_the_bound():
+    # Members putting real mass outside both bounds: the standardized CDF then spans only
+    # part of [0, 1], and interpolating the 5th/10th percentile used to clamp both onto
+    # the lower bound. The duplicate values made the result unusable as a distribution.
+    q = _q(open_lo=True, open_hi=True)
+    out = aggregate_numeric([SPREAD_MEMBER, SPREAD_MEMBER, SPREAD_MEMBER], q, PCTS)
+    vals = [out[k] for k in sorted(out)]
+    assert all(b > a for a, b in zip(vals, vals[1:])), vals
+    cdf = percentiles_to_cdf(out, q)  # the round trip the publisher makes; used to raise
+    assert len(cdf) == 201
+    assert all(b >= a for a, b in zip(cdf, cdf[1:]))
+
+
+def test_open_bounds_with_zero_point_round_trip():
+    # Log-scaled axis (zero_point set), open on both sides, with a member whose top
+    # percentile sits above the upper bound.
+    q = _q(lo=1.0, hi=1000.0, open_lo=True, open_hi=True, zero_point=0.0)
+    m = {5: 2.0, 10: 5.0, 20: 10.0, 40: 50.0, 60: 100.0, 80: 400.0, 90: 800.0, 95: 1500.0}
+    out = aggregate_numeric([m, m, m], q, PCTS)
+    vals = [out[k] for k in sorted(out)]
+    assert all(b > a for a, b in zip(vals, vals[1:])), vals
+    assert 1.0 <= vals[0] and vals[-1] <= 1000.0  # interpolation stays on the question's axis
+    cdf = percentiles_to_cdf(out, q)
+    assert len(cdf) == 201
+    assert all(b >= a for a, b in zip(cdf, cdf[1:]))
+
+
+def test_closed_bounds_round_trip_still_monotone():
+    q = _q(lo=1.0, hi=1000.0, open_lo=False, open_hi=False, zero_point=0.0)
+    m = {5: 5.0, 10: 20.0, 20: 60.0, 40: 150.0, 60: 300.0, 80: 600.0, 90: 800.0, 95: 950.0}
+    out = aggregate_numeric([m, m, m], q, PCTS)
+    vals = [out[k] for k in sorted(out)]
+    assert all(b > a for a, b in zip(vals, vals[1:])), vals
+    cdf = percentiles_to_cdf(out, q)
+    assert len(cdf) == 201 and all(b >= a for a, b in zip(cdf, cdf[1:]))
+
+
+def test_bounded_percentile_shift_caps_move_to_fraction_of_spread():
+    pre = {10: 0.0, 50: 50.0, 90: 100.0}  # p90 - p10 spread of 100
+    huge = {10: 0.0, 50: 500.0, 90: 100.0}
+    assert bounded_percentile_shift(pre, huge, 0.25)[50] == pytest.approx(75.0)
+    assert bounded_percentile_shift(pre, {10: 0.0, 50: -500.0, 90: 100.0}, 0.25)[50] == pytest.approx(25.0)
+    # A move inside the cap passes through untouched, and dropped keys keep the pre value.
+    partial = bounded_percentile_shift(pre, {50: 60.0}, 0.25)
+    assert partial == {10: 0.0, 50: 60.0, 90: 100.0}
+
+
+def test_bounded_percentile_shift_with_no_spread_returns_revision():
+    flat = {10: 5.0, 50: 5.0, 90: 5.0}
+    revised = {10: 1.0, 50: 5.0, 90: 9.0}
+    assert bounded_percentile_shift(flat, revised, 0.25) == revised

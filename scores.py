@@ -25,6 +25,7 @@ def load_records(runs_dir: str) -> list[dict]:
 
 
 def binary_log_score(p: float, resolved_yes: bool) -> float:
+    p = min(max(p, 0.001), 0.999)  # Clamp to Metaculus binary range to avoid log(0) domain error
     return math.log(p if resolved_yes else 1 - p)
 
 
@@ -53,7 +54,7 @@ def join(records: list[dict], fetch: Callable[[int], dict]) -> list[dict]:
             "log_score_final": binary_log_score(final, yes) if final is not None else None,
             "log_score_blind": binary_log_score(blind, yes) if blind is not None else None,
             "log_score_pre_da": binary_log_score(pre, yes) if pre is not None else None,
-            "peer_proxy": peer_vs_community(final, cp, yes) if (final is not None and cp) else None,
+            "peer_proxy": peer_vs_community(final, cp, yes) if (final is not None and cp is not None) else None,
             "cost_usd": r.get("cost_usd", 0.0),
         })
     return rows
@@ -91,6 +92,7 @@ def main() -> int:
     for k in ("log_score_blind", "log_score_pre_da", "log_score_final", "peer_proxy"):
         print(f"{k:18s} mean={mean(k):.4f}")
     print(f"cost per scored question: ${mean('cost_usd'):.3f}")
+    print(f"total cost: ${sum(r['cost_usd'] for r in rows):.2f}")
     return 0
 
 

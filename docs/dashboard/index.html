@@ -264,8 +264,9 @@
           "<th class=\"num\">Pre-DA</th><th class=\"num\">Post-DA</th><th class=\"num\">Cost</th>" +
           "<th>Guards</th><th>Published</th><th>Error</th></tr></thead><tbody>";
         rows.forEach(function (r) {
-          var titleCell = r.url
-            ? '<a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.title || r.post_id) + "</a>"
+          var safeUrl = typeof r.url === "string" && /^https?:\/\//i.test(r.url) ? r.url : null;
+          var titleCell = safeUrl
+            ? '<a href="' + esc(safeUrl) + '" target="_blank" rel="noopener">' + esc(r.title || r.post_id) + "</a>"
             : esc(r.title || r.post_id);
           html += "<tr>" +
             '<td class="title-cell">' + titleCell + "</td>" +

@@ -83,7 +83,10 @@ def season_spent(runs_dir: str) -> float:
     total = 0.0
     for p in Path(runs_dir).glob("**/*.json"):
         try:
-            total += float(json.loads(p.read_text(encoding="utf-8")).get("cost_usd", 0.0))
-        except (json.JSONDecodeError, OSError):
+            data = json.loads(p.read_text(encoding="utf-8"))
+            if not isinstance(data, dict):
+                continue
+            total += float(data.get("cost_usd", 0.0))
+        except (json.JSONDecodeError, OSError, ValueError, TypeError):
             continue
     return total

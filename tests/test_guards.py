@@ -53,4 +53,6 @@ def test_season_spent(tmp_path):
     d = tmp_path / "2026-09-12"; d.mkdir()
     (d / "a.json").write_text(json.dumps({"cost_usd": 0.4}))
     (d / "b.json").write_text(json.dumps({"cost_usd": 0.6}))
+    (d / "array.json").write_text(json.dumps([1, 2]))
+    (d / "bad.json").write_text(json.dumps({"cost_usd": "N/A"}))
     assert season_spent(str(tmp_path)) == 1.0

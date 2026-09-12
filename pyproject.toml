@@ -26,6 +26,13 @@ pytest-asyncio = "^1.4.0"
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+filterwarnings = [
+    # Third-party: asknews_sdk (pulled in transitively by forecasting_tools) still uses
+    # pydantic's class-based `Config`, which is deprecated in pydantic v2. Nothing in
+    # this repo triggers it and we can't fix the dependency's source, so it's silenced
+    # narrowly (by exact module) rather than masking warnings from our own code.
+    "ignore:Support for class-based `config` is deprecated:pydantic.warnings.PydanticDeprecatedSince20:asknews_sdk.dto.common",
+]
 
 [build-system]
 requires = ["poetry-core"]

@@ -29,6 +29,16 @@ def test_comment_contents_and_length():
     assert "x" * 100 not in c  # member reasoning is not dumped into the comment
 
 
+def test_comment_truncation_keeps_final():
+    rec = _rec()
+    rec.forensics.resolution_statement = "z" * 5000
+    c = comment.build(rec, 3000)
+    assert len(c) <= 3000
+    assert "**Final:** 0.24" in c
+    assert "[truncated]" in c
+    assert "cost=$0.31" in c
+
+
 def test_write_and_local_check(tmp_path):
     rec = _rec()
     rec.published = True

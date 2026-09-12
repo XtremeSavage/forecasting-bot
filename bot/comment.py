@@ -13,23 +13,27 @@ def _fmt(v: ForecastValue | None) -> str:
 
 
 def build(rec: ForecastRecord, max_chars: int) -> str:
-    parts = ["**Resolution forensics.** " + (rec.forensics.resolution_statement if rec.forensics else "stage off")]
+    head_parts = ["**Resolution forensics.** " + (rec.forensics.resolution_statement if rec.forensics else "stage off")]
     if rec.forensics:
-        parts.append(f"Status quo: {rec.forensics.status_quo_outcome}. Traps: {'; '.join(rec.forensics.traps[:3]) or 'none noted'}.")
+        head_parts.append(f"Status quo: {rec.forensics.status_quo_outcome}. Traps: {'; '.join(rec.forensics.traps[:3]) or 'none noted'}.")
     if rec.blind:
-        parts.append(f"**Blind base rate.** {rec.blind.reference_class}. Estimate {_fmt(rec.blind.forecast)}.")
+        head_parts.append(f"**Blind base rate.** {rec.blind.reference_class}. Estimate {_fmt(rec.blind.forecast)}.")
     if rec.evidence and rec.evidence.items:
         top = sorted(rec.evidence.items, key=lambda e: (e.reliability, e.credibility))[:3]
-        parts.append("**Key evidence.** " + " | ".join(f"[{e.reliability}{e.credibility}] {e.claim} ({e.source})" for e in top))
+        head_parts.append("**Key evidence.** " + " | ".join(f"[{e.reliability}{e.credibility}] {e.claim} ({e.source})" for e in top))
     if rec.aggregate:
         names = ", ".join(m.name for m in rec.members if m.dropped_reason is None)
-        parts.append(f"**ACH ensemble** ({names}): {_fmt(rec.aggregate.pre_da)} via {rec.aggregate.method}.")
+        head_parts.append(f"**ACH ensemble** ({names}): {_fmt(rec.aggregate.pre_da)} via {rec.aggregate.method}.")
         if rec.aggregate.post_da is not None:
-            parts.append(f"**Devil's advocate** moved it to {_fmt(rec.aggregate.post_da)}.")
-    parts.append(f"**Final:** {_fmt(rec.final)}")
+            head_parts.append(f"**Devil's advocate** moved it to {_fmt(rec.aggregate.post_da)}.")
+
+    tail_parts = [f"**Final:** {_fmt(rec.final)}"]
     flags = ",".join(k for k, v in rec.flags.items() if v)
-    parts.append(f"_bot=XtremeSavageForecast stages={flags} cost=${rec.cost_usd:.2f}_")
-    text = "\n\n".join(parts)
-    if len(text) > max_chars:
-        text = text[: max_chars - 15].rstrip() + "\n\n[truncated]"
-    return text
+    tail_parts.append(f"_bot=XtremeSavageForecast stages={flags} cost=${rec.cost_usd:.2f}_")
+
+    tail = "\n\n".join(tail_parts)
+    head = "\n\n".join(head_parts)
+    if len(head) + 2 + len(tail) > max_chars:
+        cut = max_chars - len(tail) - len("\n\n[truncated]\n\n")
+        head = head[:cut].rstrip() + "\n\n[truncated]"
+    return head + "\n\n" + tail

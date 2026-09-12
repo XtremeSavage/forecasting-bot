@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XtremeSavageForecast</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page:        #f9f9f7;
+    --surface:     #fcfcfb;
+    --ink:         #0b0b0b;
+    --ink-2:       #52514e;
+    --muted:       #898781;
+    --border:      rgba(11,11,11,0.10);
+    --gridline:    #e1e0d9;
+    --accent:      #2a78d6;
+    --good:        #0ca30c;
+    --good-bg:     rgba(12,163,12,0.12);
+    --warning:     #b6790a;
+    --warning-bg:  rgba(250,178,25,0.20);
+    --critical:    #d03b3b;
+    --critical-bg: rgba(208,59,59,0.12);
+    --link:        #184f95;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --page:        #0d0d0d;
+      --surface:     #1a1a19;
+      --ink:         #ffffff;
+      --ink-2:       #c3c2b7;
+      --muted:       #898781;
+      --border:      rgba(255,255,255,0.10);
+      --gridline:    #2c2c2a;
+      --accent:      #3987e5;
+      --good:        #0ca30c;
+      --good-bg:     rgba(12,163,12,0.20);
+      --warning:     #fab219;
+      --warning-bg:  rgba(250,178,25,0.20);
+      --critical:    #e66767;
+      --critical-bg: rgba(230,103,103,0.18);
+      --link:        #86b6ef;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px 16px 48px;
+  }
+  h1 {
+    font-size: 1.35rem;
+    margin: 0 0 4px;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin: 0 0 20px;
+  }
+  h2 {
+    font-size: 1rem;
+    color: var(--ink-2);
+    margin: 32px 0 10px;
+  }
+
+  .tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    min-width: 140px;
+    flex: 1 1 140px;
+  }
+  .tile .value {
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .tile .label {
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-top: 2px;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 720px;
+    font-size: 0.85rem;
+  }
+  .calibration table { min-width: 480px; }
+  th, td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--gridline);
+    white-space: nowrap;
+  }
+  th {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td.num, th.num { font-variant-numeric: tabular-nums; }
+  td.title-cell { white-space: normal; max-width: 320px; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .badge {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    color: var(--ink-2);
+  }
+  .badge.good { background: var(--good-bg); color: var(--good); }
+  .badge.warning { background: var(--warning-bg); color: var(--warning); }
+  .badge.critical { background: var(--critical-bg); color: var(--critical); }
+  .dash { color: var(--muted); }
+
+  .note {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin: 8px 0 0;
+  }
+  .empty, .error {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 18px;
+    color: var(--ink-2);
+  }
+  .error { color: var(--critical); }
+
+  @media (max-width: 480px) {
+    .tile { flex: 1 1 calc(50% - 10px); min-width: 0; }
+  }
+</style>
+</head>
+<body>
+  <h1>XtremeSavageForecast</h1>
+  <p class="subtitle" id="generated">Loading...</p>
+
+  <div id="content"></div>
+
+  <script>
+  (function () {
+    var contentEl = document.getElementById("content");
+    var generatedEl = document.getElementById("generated");
+
+    function esc(s) {
+      if (s === null || s === undefined) return "";
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+
+    function dashOr(v) {
+      return (v === null || v === undefined || v === "") ? '<span class="dash">-</span>' : esc(v);
+    }
+
+    function fmtMoney(n, digits) {
+      if (n === null || n === undefined || isNaN(n)) return '<span class="dash">-</span>';
+      return "$" + n.toFixed(digits === undefined ? 2 : digits);
+    }
+
+    function fmtNum(n, digits) {
+      if (n === null || n === undefined || isNaN(n)) return null;
+      return n.toFixed(digits === undefined ? 3 : digits);
+    }
+
+    function mean(rows, key) {
+      var vals = rows.map(function (r) { return r[key]; }).filter(function (v) { return v !== null && v !== undefined && !isNaN(v); });
+      if (!vals.length) return { mean: null, n: 0 };
+      var sum = vals.reduce(function (a, b) { return a + b; }, 0);
+      return { mean: sum / vals.length, n: vals.length };
+    }
+
+    function tile(value, label) {
+      return '<div class="tile"><div class="value">' + value + '</div><div class="label">' + esc(label) + "</div></div>";
+    }
+
+    function guardsBadge(guards) {
+      if (!guards || !guards.length) return '<span class="dash">-</span>';
+      return '<span class="badge warning">' + esc(guards.join(", ")) + "</span>";
+    }
+
+    function publishedBadge(published) {
+      return published
+        ? '<span class="badge good">yes</span>'
+        : '<span class="badge">no</span>';
+    }
+
+    function errorCell(err) {
+      if (!err) return '<span class="dash">-</span>';
+      return '<span class="badge critical" title="' + esc(err) + '">error</span>';
+    }
+
+    function renderEmpty() {
+      contentEl.innerHTML =
+        '<div class="empty">No run records yet. Once the bot forecasts a question and commits a record under ' +
+        '<code>runs/</code>, it will show up here.</div>';
+    }
+
+    function renderError(msg) {
+      contentEl.innerHTML = '<div class="error">Could not load dashboard data (' + esc(msg) +
+        "). If you're viewing this file directly from disk (file://), fetch() is blocked by the " +
+        "browser - serve it over http:// or view the deployed GitHub Pages site instead.</div>";
+    }
+
+    function render(data) {
+      var records = data.records || [];
+      var scores = data.scores || [];
+
+      generatedEl.textContent = "Data generated " + (data.generated || "unknown time");
+
+      if (!records.length && !scores.length) {
+        renderEmpty();
+        return;
+      }
+
+      var totalCost = records.reduce(function (sum, r) { return sum + (r.cost_usd || 0); }, 0);
+      var published = records.filter(function (r) { return r.published; }).length;
+      var withGuards = records.filter(function (r) { return r.guards_fired && r.guards_fired.length; }).length;
+      var costPerQuestion = records.length ? totalCost / records.length : null;
+
+      var html = "";
+
+      html += '<div class="tiles">';
+      html += tile(records.length, "questions forecast");
+      html += tile(published, "published");
+      html += tile(fmtMoney(totalCost, 2), "total cost");
+      html += tile(records.length ? fmtMoney(costPerQuestion, 3) : '<span class="dash">-</span>', "cost per question");
+      html += tile(withGuards, "records with guards fired");
+      html += tile(scores.length, "resolved binaries scored");
+      html += "</div>";
+
+      html += "<h2>Recent forecasts</h2>";
+      if (!records.length) {
+        html += '<p class="note">No run records yet.</p>';
+      } else {
+        var rows = records.slice(0, 200);
+        html += '<div class="table-wrap"><table><thead><tr>' +
+          "<th>Title</th><th>Kind</th><th class=\"num\">Final</th><th class=\"num\">Blind</th>" +
+          "<th class=\"num\">Pre-DA</th><th class=\"num\">Post-DA</th><th class=\"num\">Cost</th>" +
+          "<th>Guards</th><th>Published</th><th>Error</th></tr></thead><tbody>";
+        rows.forEach(function (r) {
+          var titleCell = r.url
+            ? '<a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.title || r.post_id) + "</a>"
+            : esc(r.title || r.post_id);
+          html += "<tr>" +
+            '<td class="title-cell">' + titleCell + "</td>" +
+            "<td>" + dashOr(r.kind) + "</td>" +
+            '<td class="num">' + dashOr(r.final) + "</td>" +
+            '<td class="num">' + dashOr(r.blind) + "</td>" +
+            '<td class="num">' + dashOr(r.pre_da) + "</td>" +
+            '<td class="num">' + dashOr(r.post_da) + "</td>" +
+            '<td class="num">' + fmtMoney(r.cost_usd, 3) + "</td>" +
+            "<td>" + guardsBadge(r.guards_fired) + "</td>" +
+            "<td>" + publishedBadge(r.published) + "</td>" +
+            "<td>" + errorCell(r.error) + "</td>" +
+            "</tr>";
+        });
+        html += "</tbody></table></div>";
+        if (records.length > 200) {
+          html += '<p class="note">Showing the 200 most recent of ' + records.length + " records.</p>";
+        }
+      }
+
+      if (scores.length) {
+        html += '<h2 class="calibration">Calibration</h2>';
+        var metrics = [
+          { key: "log_score_blind", label: "Blind" },
+          { key: "log_score_pre_da", label: "Pre-DA" },
+          { key: "log_score_final", label: "Final" },
+          { key: "peer_proxy", label: "Peer proxy" },
+        ];
+        html += '<div class="calibration table-wrap"><table><thead><tr><th>Metric</th><th class="num">Mean</th><th class="num">n</th></tr></thead><tbody>';
+        metrics.forEach(function (m) {
+          var stat = mean(scores, m.key);
+          var display = stat.mean === null ? '<span class="dash">-</span>' : fmtNum(stat.mean, m.key === "peer_proxy" ? 2 : 4);
+          html += "<tr><td>" + esc(m.label) + '</td><td class="num">' + display + '</td><td class="num">' + stat.n + "</td></tr>";
+        });
+        html += "</tbody></table></div>";
+      }
+
+      contentEl.innerHTML = html;
+    }
+
+    fetch("data.json")
+      .then(function (resp) {
+        if (!resp.ok) throw new Error("HTTP " + resp.status);
+        return resp.json();
+      })
+      .then(render)
+      .catch(function (err) {
+        generatedEl.textContent = "";
+        renderError(err && err.message ? err.message : String(err));
+      });
+  })();
+  </script>
+</body>
+</html>

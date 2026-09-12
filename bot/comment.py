@@ -33,7 +33,14 @@ def build(rec: ForecastRecord, max_chars: int) -> str:
 
     tail = "\n\n".join(tail_parts)
     head = "\n\n".join(head_parts)
-    if len(head) + 2 + len(tail) > max_chars:
-        cut = max_chars - len(tail) - len("\n\n[truncated]\n\n")
-        head = head[:cut].rstrip() + "\n\n[truncated]"
+    marker = "\n\n[truncated]"
+    if len(tail) >= max_chars:
+        # No room for any analysis at all: the forecast itself is what has to survive.
+        return tail[:max_chars]
+    head_budget = max_chars - len(tail) - 2  # 2 for the blank line between head and tail
+    if len(head) > head_budget:
+        # A tiny max_chars can leave no room even for the marker, hence the max(..., 0)
+        # and the final clamp: the tail is never sacrificed to fit the marker.
+        head = head[: max(head_budget - len(marker), 0)].rstrip() + marker
+        head = head[:head_budget]
     return head + "\n\n" + tail

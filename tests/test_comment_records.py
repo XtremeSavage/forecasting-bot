@@ -71,3 +71,11 @@ def test_question_summary_binary_and_numeric():
     assert ns.question_id == 4
     assert ns.lower_bound == 0.0
     assert ns.upper_bound == 10.0
+
+
+def test_comment_fits_a_very_small_budget():
+    # The tail alone (final forecast + footer) can exceed a tiny max_chars; the old cut
+    # arithmetic went negative and sliced the head from the wrong end.
+    assert len(comment.build(_rec(), 200)) <= 200
+    assert len(comment.build(_rec(), 40)) <= 40
+    assert len(comment.build(_rec(), 10)) <= 10

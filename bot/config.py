@@ -42,6 +42,7 @@ class ForecastCfg(BaseModel):
     p_max: float = 0.99
     mc_floor: float = 0.01
     da_max_logit_shift: float = 0.5
+    da_max_numeric_fraction: float = 0.25
     numeric_percentiles: list[int] = [5, 10, 20, 40, 60, 80, 90, 95]
 
 

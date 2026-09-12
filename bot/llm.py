@@ -100,8 +100,8 @@ class HttpTransport:
 
 
 def extract_json(text: str) -> dict:
-    m = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.S)
-    candidates = [m.group(1)] if m else []
+    m = re.search(r"```(?:json)?\s*(.*?)```", text, re.S)
+    candidates = [m.group(1).strip()] if m else []
     start, end = text.find("{"), text.rfind("}")
     if start != -1 and end > start:
         candidates.append(text[start:end + 1])
@@ -141,7 +141,10 @@ class Llm:
             if direct is None:
                 raise LlmError(f"openrouter call failed for {model}: {e}") from e
             self.fallback_used = True
-            raw = await self.t.anthropic(direct, messages, temperature, max_tokens)
+            try:
+                raw = await self.t.anthropic(direct, messages, temperature, max_tokens)
+            except Exception as e2:  # noqa: BLE001
+                raise LlmError(f"openrouter and anthropic fallback both failed for {model}: {e}; {e2}") from e2
             provider, used_model = "anthropic", direct
         cost = raw.get("cost")
         if cost is None:

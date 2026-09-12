@@ -117,6 +117,7 @@ class Llm:
     def __init__(self, settings: Settings, transport: Transport | None = None) -> None:
         self.s = settings
         self.t = transport or HttpTransport()
+        self.fallback_model = settings.models.anthropic_fallback
         self.fallback_used = False
         self.total_cost_usd = 0.0
 
@@ -137,9 +138,11 @@ class Llm:
             raw = await self.t.openrouter(model, messages, temperature, max_tokens)
             provider, used_model = "openrouter", model
         except Exception as e:  # noqa: BLE001
-            direct = self._anthropic_direct_name(model)
-            if direct is None:
-                raise LlmError(f"openrouter call failed for {model}: {e}") from e
+            # OpenRouter is the single point of failure for every model. When it is down,
+            # an anthropic/* model can be reissued against the same model directly; any
+            # other model has no direct route, so fall back to the configured Anthropic
+            # model instead of losing the question. A degraded forecast beats none.
+            direct = self._anthropic_direct_name(model) or self.fallback_model
             self.fallback_used = True
             try:
                 raw = await self.t.anthropic(direct, messages, temperature, max_tokens)

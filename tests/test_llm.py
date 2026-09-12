@@ -60,9 +60,24 @@ async def test_fallback_to_anthropic_when_openrouter_fails():
     assert llm.fallback_used is True
 
 
-async def test_no_fallback_for_non_anthropic_model():
+async def test_generic_fallback_to_anthropic_model():
+    # OpenRouter is the single point of failure for every model, not just anthropic/*.
+    # A non-anthropic model has no direct route, so it falls back to the configured
+    # Anthropic model rather than losing the call.
     s = load_settings("config.yaml")
-    t = FakeTransport(fail_openrouter=True)
+    t = FakeTransport(replies=["from claude"], fail_openrouter=True)
+    llm = Llm(s, transport=t)
+    r = await llm.complete("hi", model="openai/gpt-5.4")
+    assert r.provider == "anthropic" and r.text == "from claude"
+    assert r.model == s.models.anthropic_fallback == "claude-sonnet-4-6"
+    assert r.cost_usd == pytest.approx(100 * 3 / 1e6 + 50 * 15 / 1e6)  # ANTHROPIC_PRICES entry
+    assert llm.fallback_used is True
+    assert t.calls == [("openrouter", "openai/gpt-5.4"), ("anthropic", "claude-sonnet-4-6")]
+
+
+async def test_generic_fallback_raises_when_anthropic_also_fails():
+    s = load_settings("config.yaml")
+    t = FakeTransport(fail_openrouter=True, fail_anthropic=True)
     llm = Llm(s, transport=t)
     with pytest.raises(LlmError):
         await llm.complete("hi", model="openai/gpt-5.4")

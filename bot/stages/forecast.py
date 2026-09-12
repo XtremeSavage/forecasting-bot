@@ -59,7 +59,9 @@ def parse(text: str, q: QuestionSummary) -> tuple[ForecastValue, float | None]:
     stated = None
     if m:
         stated = float(m.group(1).replace(",", ""))
-        if m.group(2) == "%" or (q.kind in ("binary", "multiple_choice") and stated > 1):
+        # Only probabilities are ever percentages. On a numeric question "FINAL: 40%" is
+        # the model writing a unit, and dividing it by 100 would corrupt the median.
+        if q.kind in ("binary", "multiple_choice") and (m.group(2) == "%" or stated > 1):
             stated = stated / 100
     return value, stated
 

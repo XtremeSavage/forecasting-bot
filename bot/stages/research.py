@@ -52,26 +52,44 @@ async def fetch_resolution_sources(urls: list[str], timeout_s: int, max_chars: i
     return out
 
 
-async def asknews_search(queries: list[str], max_queries: int) -> list[RawSource]:
+async def asknews_search(queries: list[str], max_queries: int, timeout_s: int = 90) -> list[RawSource]:
+    """One AskNews call per query, concurrently, with a per-query timeout.
+
+    Queries run independently so a single slow or failing one costs only its own result
+    instead of the whole provider (the old sequential loop under one outer timeout threw
+    away every query that had already succeeded).
+    """
     from forecasting_tools import AskNewsSearcher
     searcher = AskNewsSearcher()
-    out = []
-    for q in queries[:max_queries]:
-        text = await searcher.get_formatted_news_async(q)
-        if text:
-            out.append(RawSource(provider="asknews", url=None, title=q, published=None, text=text))
-    return out
+    picked = list(queries)[:max_queries]
+
+    async def one(q: str) -> RawSource | None:
+        text = await asyncio.wait_for(searcher.get_formatted_news_async(q), timeout_s)
+        return RawSource(provider="asknews", url=None, title=q, published=None, text=text) if text else None
+
+    results = await asyncio.gather(*(one(q) for q in picked), return_exceptions=True)
+    return [r for r in results if isinstance(r, RawSource)]
 
 
 async def web_search(llm, settings: Settings, queries: list[str]) -> tuple[list[RawSource], float]:
-    out, cost = [], 0.0
-    for q in queries[: settings.research.max_queries]:
+    """One search-model call per query, concurrently, with a per-query timeout."""
+    cfg = settings.research
+    picked = list(queries)[: cfg.max_queries]
+
+    async def one(q: str):
         prompt = (f"Search the web for: {q}\nReport the most relevant, most recent findings as bullet points. "
                   f"Each bullet: date (YYYY-MM-DD), the fact, and the source URL. Prefer official and primary sources. No speculation.")
-        res = await llm.complete(prompt, settings.models.web_search, temperature=0.1, max_tokens=1500)
+        return await asyncio.wait_for(
+            llm.complete(prompt, settings.models.web_search, temperature=0.1, max_tokens=1500), cfg.provider_timeout_s)
+
+    results = await asyncio.gather(*(one(q) for q in picked), return_exceptions=True)
+    out, cost = [], 0.0
+    for q, res in zip(picked, results):
+        if isinstance(res, BaseException):
+            continue
         cost += res.cost_usd
         if res.text.strip():
-            out.append(RawSource(provider="web_search", url=None, title=q, published=None, text=res.text[: settings.research.source_text_max_chars]))
+            out.append(RawSource(provider="web_search", url=None, title=q, published=None, text=res.text[: cfg.source_text_max_chars]))
     return out, cost
 
 
@@ -79,10 +97,13 @@ async def run(llm, settings: Settings, forensics: Forensics, criteria_text: str,
     cfg = settings.research
     queries = forensics.search_queries or []
     tasks: dict[str, asyncio.Task] = {}
+    # asknews and web_search time out per query inside themselves and keep whatever
+    # succeeded, so no outer timeout here - that one discarded partial results. The
+    # resolution fetch has no internal per-item timeout, so it keeps its outer one.
     if cfg.asknews_enabled:
-        tasks["asknews"] = asyncio.create_task(asyncio.wait_for(asknews_search(queries, cfg.max_queries), cfg.provider_timeout_s))
+        tasks["asknews"] = asyncio.create_task(asknews_search(queries, cfg.max_queries, cfg.provider_timeout_s))
     if cfg.web_search_enabled and llm is not None:
-        tasks["web_search"] = asyncio.create_task(asyncio.wait_for(web_search(llm, settings, queries), cfg.provider_timeout_s))
+        tasks["web_search"] = asyncio.create_task(web_search(llm, settings, queries))
     if cfg.resolution_fetch_enabled:
         urls = extract_urls(criteria_text) + [u for u in extract_urls(background_text) if u not in extract_urls(criteria_text)]
         tasks["resolution_source"] = asyncio.create_task(asyncio.wait_for(fetch_resolution_sources(urls, cfg.provider_timeout_s, cfg.source_text_max_chars), cfg.provider_timeout_s))
@@ -99,4 +120,8 @@ async def run(llm, settings: Settings, forensics: Forensics, criteria_text: str,
         else:
             srcs = result
         bundle.sources.extend(srcs)
+    if tasks and not bundle.sources:
+        # Research ran and came back with nothing at all: the forecast is about to be made
+        # on the question text alone, which the record and the guards should say out loud.
+        bundle.diagnostics["NO_RESEARCH"] = "all providers returned nothing"
     return bundle, cost

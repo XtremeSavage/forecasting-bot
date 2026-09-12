@@ -9,12 +9,16 @@ on:
   schedule:
     - cron: "9,29,49 * * * *"
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
 
 jobs:
   forecast:
+    if: ${{ vars.BOT_LIVE == 'true' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

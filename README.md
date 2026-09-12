@@ -40,6 +40,8 @@ Local (Python 3.12 venv at `.venv`):
 .venv/Scripts/python.exe control_bot.py --mode test_questions
 ```
 
+Scheduled runs are off until the repo variable `BOT_LIVE` is `true` (Settings, Secrets and variables, Actions, Variables). Until then only manual `Run workflow` dispatches do anything.
+
 GitHub Actions: `Main bot on tournament` every 20 min (Fall + MiniBench), `Main bot on Metaculus Cup` every 2 days, `Control bot` workflows on the same cadence with the control token, `Test bot` manual. Records land in `runs/YYYY-MM-DD/` and are committed automatically.
 
 Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULUS_TOKEN_CONTROL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`, `ASKNEWS_CLIENT_ID`, `ASKNEWS_SECRET`.

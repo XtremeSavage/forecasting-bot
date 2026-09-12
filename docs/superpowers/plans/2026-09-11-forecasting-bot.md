@@ -10,6 +10,8 @@
 
 **Spec:** `docs/superpowers/specs/2026-09-11-forecasting-bot-design.md`
 
+**Status (2026-09-12):** All 14 tasks implemented and reviewed on branch `build/v1`. Deferred by design: Task 2 Step 7 and Task 12 Step 7 live triggers, Task 11 Step 5 paid dry run, Task 13 Step 4 community-prediction discovery, Task 14 Pages enablement. Rulings and per-task review outcomes are in `docs/superpowers/ledger-2026-09-12.md`. See `docs/HANDOFF.md`.
+
 ## Global Constraints
 
 - Python `^3.11`. Local commands use `.venv/Scripts/python.exe` (Windows). Actions use Python 3.11 + Poetry.

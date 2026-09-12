@@ -1,6 +1,6 @@
 # Forecasting Bot: Design Spec
 
-Date: 2026-09-11. Status: approved in conversation, pending XtremeSavageXD's review of this file.
+Date: 2026-09-11. Status: approved by XtremeSavageXD 2026-09-11; implemented on branch build/v1 2026-09-12 (all 14 plan tasks reviewed and complete, 58 offline tests). Live status and next steps: docs/HANDOFF.md.
 Background: `README.md` (goals, rules) and `docs/RESEARCH.md` (past winners, scoring, Fall 2026 facts).
 
 ## 1. Goal

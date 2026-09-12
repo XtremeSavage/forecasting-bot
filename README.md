@@ -23,11 +23,11 @@ Build an AI forecasting bot and enter it in the Metaculus FutureEval bot tournam
 - **Sep 28 (Mon): Fall tournament questions start opening.** Slow for the first 1-2 weeks, then full pace.
 - Questions keep opening until a few weeks before Jan 1, 2027.
 
-Plan:
+Plan (status 2026-09-12: code complete and reviewed, nothing run live yet; see `docs/HANDOFF.md`):
 
-- **Now to Sep 20: Baseline.** Submit the participation/credits form and register AskNews. Fork the template, run it on the testing area (`bot-testing-area` / `32977`) with zero custom logic, confirm forecasts and comments post correctly.
-- **Sep 21 to Sep 27: Tradecraft layer v1 on the warmup MiniBench.** Build the analytic pipeline and guards. Log everything.
-- **Sep 28 onward: Live, then iterate.** Compare against the bot community prediction, analyze MiniBench results every two weeks, change one thing at a time.
+- **Now to Sep 20: accounts, secrets, first paid dry run, then live on the testing area.** Both bots must post to bot-testing-area (`32977`) before Sep 21.
+- **Sep 21 to Sep 27: warmup MiniBench.** Both bots live. Fix what the first real records reveal. Enable the dashboard.
+- **Sep 28 onward: Fall tournament.** Analyze MiniBench results every two weeks, change one thing at a time, keep the control bot untouched.
 
 ## How to run
 
@@ -103,16 +103,22 @@ Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULU
 - [x] Ethics check. Done 2026-09-11.
 - [x] Payment check (Ramp). Done 2026-09-11.
 - [x] Tournament name and IDs confirmed: Fall 2026 FutureEval Bot Tournament, project `33121` / `fall-futureeval-2026`.
-- [x] Metaculus account and bot account created.
-- [ ] **Participation form** (required for everyone this season, 3 questions) and LLM credit request. XtremeSavageXD has safety concerns about the credits form; discuss before submitting.
-- [ ] Register the bot's email with AskNews (free, most-used source among winners).
-- [ ] Decide: open-source the bot or not (roughly double credits, fits the credential goal, but copyable).
+- [x] Metaculus account and bot account created (XtremeSavageForecast).
+- [x] Open source decided: yes, public repo from day one.
+- [x] Credits form concern resolved 2026-09-11 (the key is the bot's, in GitHub secrets).
+- [ ] **Participation form** (required for everyone this season, 3 questions) and LLM credit request.
+- [ ] **OpenRouter account** and key with a spend limit set.
+- [ ] Register the bot's email with AskNews.
+- [ ] **Second bot account** `XtremeSavageForecast-v2` for the control, plus its token.
+- [ ] Add the six secrets to the GitHub repo (names in "How to run").
+- [ ] Give the go for the first paid dry run (`run.py --mode dry --limit 1`).
 - [ ] Join the Metaculus Discord, channel `build-a-forecasting-bot`.
+- [ ] Enable GitHub Pages (source: GitHub Actions) for the dashboard.
 - [ ] Remember the required end-of-season bot survey. No survey, no prize.
 
 ## Next step
 
-Research is done (docs/RESEARCH.md). XtremeSavageXD gives detailed instructions on what the bot should be. Claude runs the full question round (per PROFILE.md), then we agree on a plan and the autonomy level for this project, then build.
+Read `docs/HANDOFF.md`. It lists the exact order: accounts, secrets, first paid dry run, live on the testing area, then the Sep 21 warmup MiniBench.
 
 ## Sources
 

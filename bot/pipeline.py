@@ -50,6 +50,12 @@ async def forecast_question(q: MetaculusQuestion, settings: Settings, llm: Llm, 
     rec = ForecastRecord(question=qs, run_ts=datetime.now(timezone.utc).isoformat(), flags=settings.stages.model_dump())
     budget = Budget(settings.limits.question_wall_clock_s, settings.limits.per_question_usd)
     desc, crit, fine = q.background_info or "", q.resolution_criteria or "", q.fine_print or ""
+    cost0 = getattr(llm, "total_cost_usd", 0.0)
+    fb0 = getattr(llm, "fallback_used", False)
+
+    def spent() -> float:
+        return max(rec.cost_usd, getattr(llm, "total_cost_usd", 0.0) - cost0)
+
     try:
         # Stage 1
         t0 = time.monotonic()
@@ -78,6 +84,9 @@ async def forecast_question(q: MetaculusQuestion, settings: Settings, llm: Llm, 
             _stage(rec, "evidence_table", res.model, res.cost_usd, t0)
         rec.evidence = ev
         # Stage 4
+        if not settings.stages.ach_forecast:
+            rec.guards_fired.append("SKIP_ACH_OFF")
+            return rec
         t0 = time.monotonic()
 
         async def one(m):
@@ -98,21 +107,27 @@ async def forecast_question(q: MetaculusQuestion, settings: Settings, llm: Llm, 
         final = pre
         # Stage 5
         if settings.stages.devils_advocate:
-            if budget.should_skip_da(rec.cost_usd, settings.limits.da_skip_at_budget_fraction):
+            if budget.should_skip_da(spent(), settings.limits.da_skip_at_budget_fraction):
                 rec.guards_fired.append("DA_SKIPPED_BUDGET")
             else:
                 t0 = time.monotonic()
-                revised, critique, dcost = await devils_advocate.run(llm, settings, qs, f, ev or EvidenceTable(), pre, today)
-                _stage(rec, "devils_advocate", settings.models.forecast_tier, dcost, t0)
-                rec.aggregate.da_critique = critique
-                if qs.kind == "binary":
-                    p = agg.bounded_logit_shift(pre.probability, revised.probability, settings.forecast.da_max_logit_shift)
-                    final = ForecastValue(kind="binary", probability=agg.aggregate_binary([p], settings.forecast.p_min, settings.forecast.p_max))
-                elif validate_value(revised, qs) == []:
-                    final = revised if qs.kind != "multiple_choice" else ForecastValue(kind="multiple_choice", options=agg.aggregate_mc([revised.options], qs.options, settings.forecast.mc_floor))
-                else:
-                    rec.guards_fired.append("DA_REVISION_INVALID")
-                rec.aggregate.post_da = final
+                try:
+                    revised, critique, dcost = await devils_advocate.run(llm, settings, qs, f, ev or EvidenceTable(), pre, today)
+                    _stage(rec, "devils_advocate", settings.models.forecast_tier, dcost, t0)
+                    rec.aggregate.da_critique = critique
+                    if qs.kind == "binary":
+                        p = agg.bounded_logit_shift(pre.probability, revised.probability, settings.forecast.da_max_logit_shift)
+                        final = ForecastValue(kind="binary", probability=agg.aggregate_binary([p], settings.forecast.p_min, settings.forecast.p_max))
+                        rec.aggregate.post_da = final
+                    elif validate_value(revised, qs) == []:
+                        final = revised if qs.kind != "multiple_choice" else ForecastValue(kind="multiple_choice", options=agg.aggregate_mc([revised.options], qs.options, settings.forecast.mc_floor))
+                        rec.aggregate.post_da = final
+                    else:
+                        rec.guards_fired.append("DA_REVISION_INVALID")
+                except Exception as e:  # noqa: BLE001
+                    rec.guards_fired.append("DA_FAILED")
+                    rec.aggregate.da_critique = f"DA failed: {type(e).__name__}: {e}"
+                    final = pre
         rec.final = final
         rec.comment = comment_mod.build(rec, settings.comment.max_chars)
         # Publish gate
@@ -130,6 +145,7 @@ async def forecast_question(q: MetaculusQuestion, settings: Settings, llm: Llm, 
         rec.guards_fired.append("PIPELINE_ERROR")
         return rec
     finally:
-        if llm is not None and getattr(llm, "fallback_used", False):
+        rec.cost_usd = spent()
+        if llm is not None and getattr(llm, "fallback_used", False) and not fb0:
             rec.guards_fired.append("PROVIDER_FALLBACK")
         records.write(rec, runs_dir)

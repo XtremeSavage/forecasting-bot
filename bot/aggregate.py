@@ -26,14 +26,19 @@ def aggregate_mc(dicts: list[dict[str, float]], options: list[str], floor: float
     med = {o: statistics.median(d.get(o, 0.0) for d in dicts) for o in options}
     total = sum(med.values())
     n = len(options)
-    remaining = max(1.0 - n * floor, 0.0)
     if total <= 0:
         return {o: 1.0 / n for o in options}
+    # A floor of `floor` per option is only satisfiable if reserving it for every option
+    # still leaves non-negative mass to distribute (n * floor < 1). Otherwise the floor
+    # invariant is impossible to honor alongside sum == 1, so it is dropped entirely
+    # (eff_floor = 0) rather than silently violating either contract.
+    eff_floor = floor if floor * n < 1 else 0.0
+    remaining = 1.0 - n * eff_floor
     # Floor every option, then distribute the remaining mass proportionally to the raw
     # medians. A naive "floor then renormalize by the floored sum" pushes floored values
     # back below the floor (dividing by a sum > 1), so the floor is applied in closed
-    # form instead: each option gets `floor` plus its share of what floor left over.
-    return {o: floor + remaining * (v / total) for o, v in med.items()}
+    # form instead: each option gets `eff_floor` plus its share of what the floor left over.
+    return {o: eff_floor + remaining * (v / total) for o, v in med.items()}
 
 
 def _fake_question(q: QuestionSummary) -> NumericQuestion:

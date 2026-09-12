@@ -41,6 +41,21 @@ def test_numeric_pointwise_median():
     assert 12 < out[10] < 18 and 52 < out[50] < 58 and 90 < out[90] < 94
 
 
+def test_mc_floor_infeasible_drops_floor_two_options():
+    # floor * n >= 1 (0.6 * 2 = 1.2): the floor invariant can't be met, so it is dropped
+    # rather than violating sum == 1 or collapsing the ordering.
+    out = aggregate_mc([{"A": 0.9, "B": 0.1}], ["A", "B"], 0.6)
+    assert sum(out.values()) == pytest.approx(1.0)
+    assert out["A"] > out["B"]
+
+
+def test_mc_floor_infeasible_drops_floor_three_options():
+    # floor * n >= 1 (0.5 * 3 = 1.5): same as above, with three options.
+    out = aggregate_mc([{"A": 0.6, "B": 0.3, "C": 0.1}], ["A", "B", "C"], 0.5)
+    assert sum(out.values()) == pytest.approx(1.0)
+    assert out["A"] > out["B"] > out["C"]
+
+
 def test_bounded_shift():
     assert bounded_logit_shift(0.5, 0.9, 0.5) == pytest.approx(sigmoid(0.5))
     assert bounded_logit_shift(0.5, 0.55, 0.5) == pytest.approx(0.55)

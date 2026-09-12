@@ -1,6 +1,6 @@
 # Handoff: where things stand
 
-Written 2026-09-12 at the end of an overnight autonomous build session. Read this first in the next session. The README holds goals and rules; `docs/RESEARCH.md` holds the tournament research; the spec and plan live under `docs/superpowers/`.
+Written 2026-09-12 at the end of an overnight autonomous build session. The project now lives at `~/projects/forecasting-bot`; the OneDrive Desktop copy is stale. Read this first in the next session. The README holds goals and rules; `docs/RESEARCH.md` holds the tournament research; the spec and plan live under `docs/superpowers/`.
 
 ## One-paragraph status
 

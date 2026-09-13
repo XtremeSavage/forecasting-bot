@@ -1,6 +1,7 @@
 name: Control bot on Metaculus Cup
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 1 */2 * *"
 

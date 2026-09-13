@@ -18,7 +18,7 @@ The bot is built, reviewed, and tested offline, and has never made a paid or liv
 
 1. **Accounts (XtremeSavageXD).** OpenRouter key with a spend limit. AskNews registration for the bot email. Second Metaculus bot account `XtremeSavageForecast-v2` for the control bot and its token. Metaculus participation form (3 questions, also the credit request). Discord `build-a-forecasting-bot`.
 2. **Secrets (XtremeSavageXD).** In the GitHub repo: `METACULUS_TOKEN`, `METACULUS_TOKEN_CONTROL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`, `ASKNEWS_CLIENT_ID`, `ASKNEWS_SECRET` (or a single `ASKNEWS_API_KEY` instead of the pair). Locally, copy `.env.template` to `.env` and fill it in. Never paste keys into chat.
-3. **Before the dry run**, add `workflow_dispatch:` to `.github/workflows/control_cup.yaml` (see residuals below).
+3. ~~Add `workflow_dispatch:` to `control_cup.yaml`~~ Done 2026-09-13.
 4. ~~First paid dry run~~ **Done 2026-09-13.** Two runs on question 43322 (numeric, FY2026 average interest rate on federal debt). First run: $0 and no forecast because the OpenRouter account had no prepaid balance (402); every stage failed soft as designed and a record was still written. Second run after $25 was added: exit 0, no guards, **$0.38**, 2 min 15 s, all four members parsed, devil's advocate parsed, OpenRouter `usage.cost` came back non-zero, `:online` web search returned 5 cited chunks, AskNews returned 2 bundles, resolution fetch returned 3 pages. Records: `runs/2026-09-13/`. Cost split: web search $0.21 (54%), members $0.09, forensics $0.03, DA $0.02, blind $0.02, evidence $0.02. Findings: (a) **fixed** the numeric aggregator was pre-standardizing member CDFs (Metaculus 1% uniform floor) before the median and the publisher standardized again, so posted tails were far wider than any member's (p95 5.02 vs members' 4.2); `aggregate_numeric` now medians the raw CDFs and the floor is applied once at publish; (b) **observed, not changed**: Grok returned the blind base-rate percentiles verbatim because the evidence stage found nothing new, i.e. members anchor on the blind number the prompt hands them; candidate MiniBench experiment: withhold the blind estimate from members; (c) web search is half the cost; `research.max_queries` 5 to 3 would save ~$0.08/question. The original step read: **First paid dry run (with XtremeSavageXD's go).** From the project folder:
    ```
    .venv/Scripts/python.exe run.py --mode dry --limit 1
@@ -99,7 +99,7 @@ A senior review of the whole branch found one Critical and ten Important issues;
 
 Residuals parked for XtremeSavageXD, none blocking:
 
-- `control_cup.yaml` has no manual trigger, so it cannot be rehearsed by hand before `BOT_LIVE` is set. One-line fix: add `workflow_dispatch:` under `on:`.
+- ~~`control_cup.yaml` has no manual trigger~~ Fixed 2026-09-13: `workflow_dispatch:` added.
 - The control workflows do not pass `ANTHROPIC_API_KEY`; the stock template has no fallback route. XtremeSavageXD's call whether the control should get one.
 - During an OpenRouter outage all four ensemble members become the same Anthropic model; `PROVIDER_FALLBACK` records it.
 - A timed-out question's record shows `published=False` with no guard string (the guard is only logged); the question is retried next run.

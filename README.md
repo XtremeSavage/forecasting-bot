@@ -112,11 +112,11 @@ Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULU
 - [x] Open source decided: yes, public repo from day one.
 - [x] Credits form concern resolved 2026-09-11 (the key is the bot's, in GitHub secrets).
 - [x] **Participation form** and LLM credit request (same form, https://forms.gle/aQdYMq9Pisrf1v7d8). Submitted by 2026-09-13.
-- [ ] **OpenRouter account** and key with a spend limit set.
-- [ ] Register the bot's email with AskNews.
+- [x] OpenRouter account, key, and $25 prepaid (2026-09-13). Metaculus credit request pending.
+- [x] AskNews API key in place (2026-09-13).
 - [ ] **Second bot account** `XtremeSavageForecast-v2` for the control, plus its token.
 - [ ] Add the six secrets to the GitHub repo (names in "How to run").
-- [ ] Give the go for the first paid dry run (`run.py --mode dry --limit 1`).
+- [x] First paid dry run done 2026-09-13: $0.38, clean. See `docs/HANDOFF.md` step 4.
 - [ ] Join the Metaculus Discord, channel `build-a-forecasting-bot`.
 - [ ] Enable GitHub Pages (source: GitHub Actions) for the dashboard.
 - [ ] Remember the required end-of-season bot survey. No survey, no prize.

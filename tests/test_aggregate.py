@@ -122,3 +122,16 @@ def test_bounded_percentile_shift_with_no_spread_returns_revision():
     flat = {10: 5.0, 50: 5.0, 90: 5.0}
     revised = {10: 1.0, 50: 5.0, 90: 9.0}
     assert bounded_percentile_shift(flat, revised, 0.25) == revised
+
+
+def test_numeric_aggregate_does_not_prestandardize_tails():
+    # Regression for the first paid dry run (2026-09-13, question 43322): every member was
+    # pushed through the library's Metaculus standardization (a 1% uniform floor over the
+    # whole range) before the median, then again at publish. Each pass moved p5 down ~0.27
+    # and p95 up ~0.5 on a 1-7 range, so the posted tails were far wider than any member's.
+    # Aggregating identical members must return those members' percentiles, tails included.
+    q = _q().model_copy(update={"lower_bound": 1.0, "upper_bound": 7.0, "open_lower": False, "open_upper": False})
+    m = {5: 3.0, 10: 3.08, 20: 3.2, 40: 3.39, 60: 3.58, 80: 3.84, 90: 4.03, 95: 4.18}
+    out = aggregate_numeric([m, m, m, m], q, sorted(m))
+    for k, v in m.items():
+        assert out[k] == pytest.approx(v, abs=0.02), f"p{k}: {out[k]} vs member {v}"

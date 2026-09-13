@@ -49,10 +49,27 @@ def _fake_question(q: QuestionSummary) -> NumericQuestion:
     )
 
 
-def percentiles_to_cdf(percentiles: dict[int, float], q: QuestionSummary) -> list[float]:
+def percentiles_to_cdf(percentiles: dict[int, float], q: QuestionSummary, *, standardize: bool = True) -> list[float]:
+    """Percentiles -> 201-point CDF on the question's grid.
+
+    With `standardize=True` (the default, used by the publisher and the guards) the library
+    applies Metaculus's submission rules: a 1% uniform floor across the whole range, minimum
+    slope, capped PMF. That floor visibly widens the tails (on a 1-7 range it moves p5 down
+    ~0.27 and p95 up ~0.5), and it compounds every time a CDF is read back to percentiles and
+    rebuilt. It must therefore be applied exactly once, at publish. Internal aggregation
+    passes `standardize=False` to get the raw piecewise-linear CDF (bounds handled, no floor).
+    """
     pcts = [Percentile(percentile=k / 100, value=float(v)) for k, v in sorted(percentiles.items())]
-    dist = NumericDistribution.from_question(pcts, _fake_question(q))
-    return [p.percentile for p in dist.get_cdf()]
+    dist = NumericDistribution.from_question(pcts, _fake_question(q), standardize_cdf=standardize)
+    if standardize:
+        return [p.percentile for p in dist.get_cdf()]
+    # Raw path: evaluate the library's piecewise-linear CDF (bounds handled inside
+    # _get_cdf_at) on the same grid, but skip its re-validation, which rejects the
+    # float noise (1.0000000000000007) the un-standardized path can produce on
+    # log-scaled questions. Clamp and round instead.
+    n = dist.cdf_size or 201
+    raw = [dist._get_cdf_at(i / (n - 1)) for i in range(n)]
+    return [min(max(round(float(v), 10), 0.0), 1.0) for v in raw]
 
 
 def _cdf_to_percentiles(cdf: list[float], q: QuestionSummary, targets: list[int]) -> dict[int, float]:
@@ -86,7 +103,8 @@ def _cdf_to_percentiles(cdf: list[float], q: QuestionSummary, targets: list[int]
 
 
 def aggregate_numeric(members: list[dict[int, float]], q: QuestionSummary, target_percentiles: list[int]) -> dict[int, float]:
-    cdfs = np.array([percentiles_to_cdf(m, q) for m in members])
+    # Raw (un-standardized) member CDFs: the Metaculus floor is applied once, by the publisher.
+    cdfs = np.array([percentiles_to_cdf(m, q, standardize=False) for m in members])
     med = np.median(cdfs, axis=0)
     med = np.maximum.accumulate(med)  # keep monotone after pointwise median
     return _cdf_to_percentiles(list(med), q, target_percentiles)

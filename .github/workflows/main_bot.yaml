@@ -40,7 +40,7 @@ jobs:
         continue-on-error: true
         run: |
           set +e
-          poetry run python run.py --mode ${{ github.event.inputs.mode || 'tournament' }} --limit ${{ github.event.inputs.limit || '15' }}
+          poetry run python run.py --mode ${{ github.event.inputs.mode || 'tournament' }} --limit ${{ github.event.inputs.limit || '15' }} --config ${{ vars.BOT_CONFIG || 'config.yaml' }}
           echo "exit=$?" >> "$GITHUB_OUTPUT"
         env:
           METACULUS_TOKEN: ${{ secrets.METACULUS_TOKEN }}

@@ -36,9 +36,12 @@ Local (Python 3.12 venv at `.venv`):
 ```
 .venv/Scripts/python.exe -m pytest -q                 # tests, no network
 .venv/Scripts/python.exe run.py --mode dry --limit 1  # full pipeline, no publish
+.venv/Scripts/python.exe run.py --mode dry --limit 1 --config config.lean.yaml  # same, lean cost profile
 .venv/Scripts/python.exe run.py --mode test           # publish to bot-testing-area
 .venv/Scripts/python.exe control_bot.py --mode test_questions
 ```
+
+Two cost profiles ship: `config.yaml` (default, ~$0.40/question) and `config.lean.yaml` (~$0.12-0.15/question, two ensemble members, mini model for the support stages). On GitHub, set the repository variable `BOT_CONFIG` to `config.lean.yaml` to switch; unset means default.
 
 Scheduled runs are off until the repo variable `BOT_LIVE` is `true` (Settings, Secrets and variables, Actions, Variables). Until then only manual `Run workflow` dispatches do anything.
 

@@ -1,0 +1,60 @@
+# Lean profile: same pipeline, roughly a third of the cost of config.yaml.
+# Use when running on personal money without Metaculus credits.
+# Flip on GitHub by setting the repository variable BOT_CONFIG to config.lean.yaml;
+# locally with: run.py --config config.lean.yaml
+#
+# What changes vs config.yaml:
+#   - forensics, blind base rate, and devil's advocate run on the mini model
+#   - two ensemble members instead of four (final forecast stays on frontier models)
+#   - two web-search queries instead of five (AskNews is free and unchanged)
+#   - tighter per-question and season caps
+stages:
+  forensics: true
+  blind_base_rate: true
+  evidence_table: true
+  ach_forecast: true
+  devils_advocate: true
+
+models:
+  forecast_tier: openai/gpt-5.4-mini
+  cheap_tier: openai/gpt-5.4-mini
+  web_search: openai/gpt-5.4-mini:online
+  anthropic_fallback: claude-sonnet-4-6
+  members:
+    - {name: gpt54, model: openai/gpt-5.4, temperature: 0.5}
+    - {name: sonnet46, model: anthropic/claude-sonnet-4.6, temperature: 0.5}
+
+limits:
+  per_call_usd: 0.25
+  per_question_usd: 0.40
+  season_usd: 150.0
+  question_wall_clock_s: 600
+  da_skip_at_budget_fraction: 0.7
+  min_members: 2
+  max_questions_per_run: 15
+  max_concurrent_questions: 3
+
+forecast:
+  p_min: 0.01
+  p_max: 0.99
+  mc_floor: 0.01
+  da_max_logit_shift: 0.5
+  da_max_numeric_fraction: 0.25
+  numeric_percentiles: [5, 10, 20, 40, 60, 80, 90, 95]
+
+research:
+  asknews_enabled: true
+  web_search_enabled: true
+  resolution_fetch_enabled: true
+  max_queries: 2
+  provider_timeout_s: 90
+  source_text_max_chars: 6000
+
+tournaments:
+  fall: 33121
+  minibench: minibench
+  cup: 33108
+  test: bot-testing-area
+
+comment:
+  max_chars: 3000

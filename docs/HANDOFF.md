@@ -47,6 +47,8 @@ The bot is built, reviewed, and tested offline, and has never made a paid or liv
 | `docs/dashboard/` | `build_index.py` makes `data.json` from `runs/`; `index.html` renders it. Deployed by `pages.yaml`. |
 | `.github/workflows/` | `main_bot`, `cup`, `test_bot` (ours), `control_bot`, `control_cup` (template), `pages`. Our workflows commit `runs/` back to `main` after each run. |
 
+**Cost profiles (added 2026-09-13).** `config.lean.yaml` is a second profile at roughly a third of the cost: forecast_tier moved to gpt-5.4-mini (forensics, base rate, devil's advocate), two members (gpt-5.4, sonnet-4.6), two web-search queries, $0.40/question and $150/season caps. Workflows pick the profile from the repo variable `BOT_CONFIG` (default `config.yaml`). XtremeSavageXD is funding OpenRouter personally ($25 to start) while the Metaculus credit request is pending; if credits do not arrive, switch to lean before Sep 28.
+
 Model roster in `config.yaml` as of 2026-09-12 (all verified to exist on OpenRouter): forecast tier `openai/gpt-5.4`; members `openai/gpt-5.4` at two temperatures, `anthropic/claude-sonnet-4.6`, `x-ai/grok-4.6`; cheap tier `openai/gpt-5.4-mini`; web search `openai/gpt-5.4-mini:online`. Rough cost estimate is $0.35 to $0.45 per question against a $1 cap.
 
 ## Decisions made without XtremeSavageXD (rulings)

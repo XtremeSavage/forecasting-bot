@@ -60,18 +60,37 @@ def join(records: list[dict], fetch: Callable[[int], dict]) -> list[dict]:
     return rows
 
 
+def cp_from_question_json(qj: dict) -> float | None:
+    """Community prediction (binary) from a Metaculus question JSON, or None if hidden.
+
+    Verified against the live API on 2026-09-13 with the bot token: the aggregation block
+    is keyed by the question's `default_aggregation_method` (`recency_weighted` on
+    Metaculus Cup questions, `unweighted` on bot tournaments), and for a bot account both
+    `latest` and `history` are null on any question the bot did not forecast, and on most
+    others too (the API exposes the CP to bots on only ~50 questions unless the Bot
+    Benchmarking access tier is granted via the Data Needs Form). So None is the common
+    case, not an error; `peer_proxy` stays empty until that access exists.
+    """
+    try:
+        aggs = qj.get("aggregations") or {}
+        method = qj.get("default_aggregation_method") or "recency_weighted"
+        block = aggs.get(method) or aggs.get("recency_weighted") or aggs.get("unweighted") or {}
+        latest = block.get("latest")
+        if latest and latest.get("centers"):
+            return float(latest["centers"][0])
+        hist = block.get("history") or []
+        if hist and hist[-1].get("centers"):
+            return float(hist[-1]["centers"][0])
+    except (KeyError, IndexError, TypeError, ValueError):
+        pass
+    return None
+
+
 def metaculus_fetch(client: MetaculusClient) -> Callable[[int], dict]:
     def f(post_id: int) -> dict:
         q = client.get_question_by_post_id(post_id)
         res = (q.resolution_string or "").lower() or None
-        cp = None
-        try:  # UNVERIFIED: discovered path in Step 4 of implementation
-            # Must be confirmed against a real resolved question before trusting cp_at_reveal.
-            # Command to verify: .venv/Scripts/python.exe -c "from forecasting_tools import MetaculusClient; import json; q=MetaculusClient().get_question_by_post_id(<resolved_binary_post_id>); print(q.resolution_string); print(json.dumps(q.api_json['question'].get('aggregations'), indent=1)[:3000])"
-            aggs = q.api_json["question"]["aggregations"]["recency_weighted"]["history"]
-            cp = float(aggs[-1]["centers"][0]) if aggs else None
-        except (KeyError, IndexError, TypeError):
-            cp = None
+        cp = cp_from_question_json((q.api_json or {}).get("question") or {})
         return {"resolved": res in ("yes", "no"), "resolution": res, "cp_at_reveal": cp}
     return f
 

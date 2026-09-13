@@ -118,6 +118,7 @@ Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULU
 - [ ] Add the six secrets to the GitHub repo (names in "How to run").
 - [x] First paid dry run done 2026-09-13: $0.38, clean. See `docs/HANDOFF.md` step 4.
 - [ ] Join the Metaculus Discord, channel `build-a-forecasting-bot`.
+- [ ] Submit the Metaculus Data Needs Form (Bot Benchmarking access tier) so the scorer can see community predictions. Link is in the "What data do I have access to" section of the resources page.
 - [ ] Enable GitHub Pages (source: GitHub Actions) for the dashboard.
 - [ ] Remember the required end-of-season bot survey. No survey, no prize.
 

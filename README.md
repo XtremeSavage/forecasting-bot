@@ -44,7 +44,7 @@ Scheduled runs are off until the repo variable `BOT_LIVE` is `true` (Settings, S
 
 GitHub Actions: `Main bot on tournament` every 20 min (Fall + MiniBench), `Main bot on Metaculus Cup` every 2 days, `Control bot` workflows on the same cadence with the control token, `Test bot` manual. Records land in `runs/YYYY-MM-DD/` and are committed automatically.
 
-Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULUS_TOKEN_CONTROL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`, `ASKNEWS_CLIENT_ID`, `ASKNEWS_SECRET`.
+Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULUS_TOKEN_CONTROL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`, `ASKNEWS_CLIENT_ID`, `ASKNEWS_SECRET` (or a single `ASKNEWS_API_KEY` instead of the pair).
 
 ## Background research (as of 2026-09-10)
 
@@ -108,7 +108,7 @@ Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULU
 - [x] Metaculus account and bot account created (XtremeSavageForecast).
 - [x] Open source decided: yes, public repo from day one.
 - [x] Credits form concern resolved 2026-09-11 (the key is the bot's, in GitHub secrets).
-- [ ] **Participation form** (required for everyone this season, 3 questions) and LLM credit request.
+- [x] **Participation form** and LLM credit request (same form, https://forms.gle/aQdYMq9Pisrf1v7d8). Submitted by 2026-09-13.
 - [ ] **OpenRouter account** and key with a spend limit set.
 - [ ] Register the bot's email with AskNews.
 - [ ] **Second bot account** `XtremeSavageForecast-v2` for the control, plus its token.

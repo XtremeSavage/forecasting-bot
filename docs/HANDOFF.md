@@ -1,6 +1,6 @@
 # Handoff: where things stand
 
-Written 2026-09-12 at the end of an overnight autonomous build session. The project now lives at `~/projects/forecasting-bot`; the OneDrive Desktop copy is stale. Read this first in the next session. The README holds goals and rules; `docs/RESEARCH.md` holds the tournament research; the spec and plan live under `docs/superpowers/`.
+Written 2026-09-12 at the end of an overnight autonomous build session. The project now lives at `~/projects/forecasting-bot`; the OneDrive Desktop copy was deleted 2026-09-13. Read this first in the next session. The README holds goals and rules; `docs/RESEARCH.md` holds the tournament research; the spec and plan live under `docs/superpowers/`.
 
 ## One-paragraph status
 
@@ -17,7 +17,7 @@ The bot is built, reviewed, and tested offline, and has never made a paid or liv
    Then delete the snapshot branch on GitHub. Nothing else in this list works until `main` is on GitHub.
 
 1. **Accounts (XtremeSavageXD).** OpenRouter key with a spend limit. AskNews registration for the bot email. Second Metaculus bot account `XtremeSavageForecast-v2` for the control bot and its token. Metaculus participation form (3 questions, also the credit request). Discord `build-a-forecasting-bot`.
-2. **Secrets (XtremeSavageXD).** In the GitHub repo: `METACULUS_TOKEN`, `METACULUS_TOKEN_CONTROL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`, `ASKNEWS_CLIENT_ID`, `ASKNEWS_SECRET`. Locally, copy `.env.template` to `.env` and fill it in. Never paste keys into chat.
+2. **Secrets (XtremeSavageXD).** In the GitHub repo: `METACULUS_TOKEN`, `METACULUS_TOKEN_CONTROL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`, `ASKNEWS_CLIENT_ID`, `ASKNEWS_SECRET` (or a single `ASKNEWS_API_KEY` instead of the pair). Locally, copy `.env.template` to `.env` and fill it in. Never paste keys into chat.
 3. **Before the dry run**, add `workflow_dispatch:` to `.github/workflows/control_cup.yaml` (see residuals below).
 4. **First paid dry run (with XtremeSavageXD's go).** From the project folder:
    ```

@@ -1,6 +1,6 @@
 # Project: Forecasting Bot
 
-This folder (`~/projects/forecasting-bot`) is the live copy as of 2026-09-12. The old OneDrive Desktop folder is stale and can be deleted.
+This folder (`~/projects/forecasting-bot`) is the live copy as of 2026-09-12. The old OneDrive Desktop folder was deleted 2026-09-13.
 
 Read `docs/HANDOFF.md` first: it says exactly where the build stands and what to do next. Then `README.md` for goals, rules, and open items. `docs/RESEARCH.md` holds the tournament research. The spec and plan are under `docs/superpowers/`..
 

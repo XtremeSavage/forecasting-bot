@@ -1,0 +1,382 @@
+{
+ "question": {
+  "post_id": 43323,
+  "question_id": 43325,
+  "url": "https://www.metaculus.com/questions/43323",
+  "title": "What will be Donald Trump's net approval on December 31, 2026?",
+  "kind": "numeric",
+  "close_time": "2026-12-31T00:00:00+00:00",
+  "options": null,
+  "lower_bound": -35.0,
+  "upper_bound": 0.0,
+  "open_lower": true,
+  "open_upper": true,
+  "cdf_size": 201,
+  "zero_point": null,
+  "unit": "%"
+ },
+ "run_ts": "2026-09-14T00:51:13.881748+00:00",
+ "flags": {
+  "forensics": true,
+  "blind_base_rate": true,
+  "evidence_table": true,
+  "ach_forecast": true,
+  "devils_advocate": true
+ },
+ "forensics": {
+  "resolution_statement": "This question resolves to Donald Trump's net approval rating on December 31, 2026, according to data from the Silver Bulletin. If data for December 31, 2026 are not published by the Silver Bulletin, it resolves to Trump's net approval on the latest available day in December 2026. If Silver Bulletin ceases to publish Trump's approval rating, the question is annulled.",
+  "status_quo_outcome": "If nothing changes, it resolves to the Silver Bulletin net approval figure for Donald Trump on December 31, 2026; if that exact date is unavailable, then the latest available day in December 2026 is used.",
+  "key_dates": [
+   "2026-09-14 (today)",
+   "2026-12-31T00:00:00+00:00 (close time)",
+   "2026-12-31 (primary snapshot date)",
+   "Latest available day in December 2026 (fallback if no Dec 31 publication)"
+  ],
+  "traps": [
+   "Only the Silver Bulletin is authoritative for resolution.",
+   "The metric is net approval, not approval alone or disapproval alone.",
+   "The operative date is 'on December 31, 2026,' with fallback only to the latest available day in December 2026.",
+   "If Dec 31 data are absent, do not use January 2027 or November 2026 data if a later December value exists.",
+   "The close timestamp is 2026-12-31T00:00:00+00:00, but the resolution criterion is tied to the calendar date December 31, 2026.",
+   "Annulment requires that Silver Bulletin ceases to publish Trump's approval rating, not merely that one day's figure is delayed or omitted.",
+   "The market range has open bounds at -35.0 and 0.0, but the source value still controls resolution."
+  ],
+  "possibly_already_resolved": false,
+  "already_resolved_reason": "",
+  "search_queries": [
+   "site:natesilver.net Silver Bulletin Trump approval December 2026 net approval",
+   "site:natesilver.net/p/trump-approval-ratings-nate-silver-bulletin December 31 2026 Trump net approval",
+   "Silver Bulletin Trump approval latest available day in December 2026",
+   "Nate Silver Bulletin Trump approval 2026-12-31 net approval",
+   "Silver Bulletin ceased to publish Trump's approval rating 2026"
+  ],
+  "things_that_do_not_count": [
+   "A Trump approval figure from FiveThirtyEight, RealClearPolitics, Gallup, YouGov, or any non-Silver-Bulletin source.",
+   "A single poll result rather than the Silver Bulletin reported figure.",
+   "Approval percentage by itself without using net approval.",
+   "A value from January 2027 when December 2026 data are missing.",
+   "A generic December 2026 average if Silver Bulletin instead provides a controlling dated value.",
+   "Narrative descriptions of Trump's standing without the actual Silver Bulletin number."
+  ]
+ },
+ "blind": {
+  "reference_class": "End-of-year and monthly/quarterly net approval ratings for incumbent US presidents, especially highly polarized presidents, over ~3-4 month forecast windows; with extra weight on Donald Trump's own historically stable first-term approval pattern.",
+  "base_rate_reasoning": "In this reference class, approval is sticky over a 3.5-month horizon. Typical movement is a few points, with larger sustained swings usually tied to major shocks. Structurally, the prompt indicates Trump has often sat in a durable negative-approval band, commonly around -10 to -20, though his second term has shown somewhat more movement. Absent news, the outside-view expectation is mean reversion toward that familiar range rather than a move near 0 or deep into the -30s. A center near the mid/high negative teens with moderate dispersion best matches the base rate.",
+  "forecast": {
+   "kind": "numeric",
+   "probability": null,
+   "options": null,
+   "percentiles": {
+    "5": -29.0,
+    "10": -26.0,
+    "20": -23.0,
+    "40": -18.0,
+    "60": -15.0,
+    "80": -11.0,
+    "90": -8.0,
+    "95": -6.0
+   }
+  }
+ },
+ "research": {
+  "sources": [
+   {
+    "provider": "web_search",
+    "url": null,
+    "title": "site:natesilver.net Silver Bulletin Trump approval December 2026 net approval",
+    "published": null,
+    "text": "- **2026-09-11** — Silver Bulletin’s Trump approval page was updated on September 11, 2026, and reported that Trump’s **net approval rating was -19.5**, up slightly from its all-time low of **-20.6**. Source: https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin ([natesilver.net](https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true&utm_source=openai))\n\n- **2026-09-11** — The Silver Bulletin homepage/archive listed **“How popular is Donald Trump?”** as a recent post from **Sep 11, 2026**, confirming the approval tracker is actively being updated around that date. Source: https://www.natesilver.net/ and https://www.natesilver.net/archive?sort=new ([natesilver.net](https://www.natesilver.net/?utm_source=openai))\n\nI did **not** find a December 2026-specific Silver Bulletin Trump approval page in the search results; the most relevant recent finding available from the site was the **September 11, 2026** update. ([natesilver.net](https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true&utm_source=openai))"
+   },
+   {
+    "provider": "web_search",
+    "url": null,
+    "title": "site:natesilver.net/p/trump-approval-ratings-nate-silver-bulletin December 31 2026 Trump net approval",
+    "published": null,
+    "text": "- **2026-09-11** — Silver Bulletin’s Trump approval page says Donald Trump’s **net approval rating was -19.5**, up slightly from its all-time low of **-20.6**. Source: https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true ([natesilver.net](https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true&utm_source=openai))\n\n- **2026-09-11** — The same Silver Bulletin page was **updated on September 11, 2026** and is the current Trump approval dashboard landing page. Source: https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true ([natesilver.net](https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true&utm_source=openai))\n\n- **2026-09-11** — The Silver Bulletin homepage/archive lists **“How popular is Donald Trump?”** among the most recent posts, confirming the Trump approval dashboard is actively maintained. Source: https://www.natesilver.net/archive?sort=new ([natesilver.net](https://www.natesilver.net/archive?sort=new&utm_source=openai))\n\nI did **not** find a December 31, 2026 entry in the search results. The most recent relevant result available was dated **2026-09-11**. ([natesilver.net](https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true&utm_source=openai))"
+   },
+   {
+    "provider": "web_search",
+    "url": null,
+    "title": "Silver Bulletin Trump approval latest available day in December 2026",
+    "published": null,
+    "text": "- 2026-09-11 — Silver Bulletin’s Trump approval tracker page was updated on this date; the page says Donald Trump’s net approval was **-19.5**, up slightly from its all-time low of **-20.6**. Source: https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true ([natesilver.net](https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true&utm_source=openai))\n- 2026-09-11 — Silver Bulletin’s archive lists **“How popular is Donald Trump?”** as a recent post, confirming the tracker exists and was among the latest Silver Bulletin updates on that day. Source: https://www.natesilver.net/archive ([natesilver.net](https://www.natesilver.net/archive))\n- 2026-08-27 — An earlier Silver Bulletin update stated Trump’s net approval was **-19.5** and that the page would continue updating as new polls arrived. Source: https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true ([natesilver.net](https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true))\n\nNote: I could not verify any Silver Bulletin Trump approval entry specifically dated in **December 2026** because that month is in the future relative to the available sources."
+   },
+   {
+    "provider": "web_search",
+    "url": null,
+    "title": "Nate Silver Bulletin Trump approval 2026-12-31 net approval",
+    "published": null,
+    "text": "- 2026-08-27 — Silver Bulletin’s Trump approval page was updated on this date, and the page says Donald Trump’s net approval rating was **-19.5**, up slightly from an all-time low of **-20.6**. Source: https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin ([natesilver.net](https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true))\n\n- 2026-08-27 — Silver Bulletin describes its approval page as the landing page for Trump approval ratings and says it will regularly update the charts as new polls come in; the page also notes the model’s average is based on all polls and weights more reliable polls more heavily. Source: https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin ([natesilver.net](https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true))\n\n- 2026-08-27 — The page states Silver Bulletin launched its 2026 midterm election forecast that month, which is the most recent related update visible on the page. Source: https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin ([natesilver.net](https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true))\n\nI did not find a source specifically for **2026-12-31** in the results. The most relevant recent Silver Bulletin source I found is the August 27, 2026 page above."
+   },
+   {
+    "provider": "web_search",
+    "url": null,
+    "title": "Silver Bulletin ceased to publish Trump's approval rating 2026",
+    "published": null,
+    "text": "- **2026-09-11** — Silver Bulletin’s Trump approval-rating page is still being updated; the page says “Updated September 11, 2026” and “We’ll regularly update the charts below as new polls about Donald Trump’s approval rating come in,” which indicates it has **not** ceased publishing as of that date. ([natesilver.net](https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin?action=restack-comment&triedRedirect=true&utm_source=openai)) — Source URL: https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin\n\n- **2026-09-11** — Silver Bulletin’s archive still lists “How popular is Donald Trump?” as a current item, last shown in the archive within hours of the crawl, again indicating the approval-rating tracker remains active. ([natesilver.net](https://www.natesilver.net/archive?utm_source=openai)) — Source URL: https://www.natesilver.net/archive\n\n- **2026-09-10** — A Silver Bulletin post published on this date links to the Trump approval-rating dashboard as an active current model/dashboard on the site, not a discontinued one. ([natesilver.net](https://www.natesilver.net/p/nate-silver-2026-midterm-election-polls-model?triedRedirect=true&utm_source=openai)) — Source URL: https://www.natesilver.net/p/nate-silver-2026-midterm-election-polls-model?triedRedirect=true\n\n- **2025-03-13** — Silver Bulletin announced it had launched its Trump approval-rating dashboard, establishing that the project was started and published on the site. ([natesilver.net](https://www.natesilver.net/p/how-to-use-silver-bulletin?utm_source=openai)) — Source URL: https://www.natesilver.net/p/how-to-use-silver-bulletin\n\nI did **not** find a primary-source item saying Silver Bulletin ceased publishing Trump’s approval rating in 2026. The most relevant primary-source evidence I found says the tracker was still being updated on **2026-09-11**."
+   },
+   {
+    "provider": "resolution_source",
+    "url": "https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin",
+    "title": null,
+    "published": null,
+    "text": "🕒 The latest on Trump’s approval rating\nUpdated September 11, 2026\nDonald Trump’s net approval rating is up slightly from its all time low of -20.6. Still, a net approval of -19.5 is far from popular. This far into his first term, Trump was all the way up at -11.6, which is also right around where Joe Biden was at the same point in his presidency.\nIn other Silver Bulletin news, we launched our 2026 midterm election forecast this month. Check it out to see our predictions for every Senate, House and gubernatorial race this cycle. -EMD, 8/24/26\nThis is the landing page for Silver Bulletin presidential approval ratings. We’ll regularly update the charts below as new polls about Donald Trump’s approval rating come in.1 This page is designed to be viewed on the web rather than in our email client or in the Substack app.\nClick here for more information on how the average works. The Silver Bulletin average weights more reliable polls heavily — you can find our latest pollster ratings here.\nThe topline: So, just how popular is Trump?\nOur default average reflects a combination of all polls, whether conducted among adults, registered voters or likely voters. If a pollster releases multiple versions of the same survey, we use the all-adult version of the poll before the registered voter version.2 This is because all Americans have a say in how popular the president is — whether or not they vote.\nThe polls: What do the surveys say?\nEach poll gets an “influence” score based on its pollster rating, its sample size, its recency, and how often a pollster is publishing numbers.3 Sometimes, surveys with mediocre pollster ratings have more weight in the model just because they were conducted very recently or polled more people.\nInevitably, there’s a lot of disagreement from survey to survey, not just because of statistical variation but because pollsters have long had trouble pegging down Trump’s popularity. By clicking on the “adjusted results” tab, you can see how the “house effects” adjustment that corrects for these predictable differences works in our model. You can also click here to download every Trump approval poll in our database — including some additional details not shown in the chart below.\nThe issues: What do Americans think of Trump’s policies?\nPollsters don’t just ask about Trump’s overall job approval, they also ask about how well he’s dealing with different issues. We’re tracking how the public feels about Trump’s handling of four topics: the economy, immigration, trade and tariffs, and the cost of living.\nThe deep dive\nWe also have a few features we’re reserving for paying subscribers:\n- How do Trump’s approval ratings compare to every past president since Truman?\n- How many voters strongly approve or disapprove of Trump?\n- What are Trump’s numbers in only polls of adults or only polls of likely and registered voters?\nYou can find all of that, plus downloadable data on every president’s approval rating every day since 1945, down below."
+   }
+  ],
+  "diagnostics": {}
+ },
+ "evidence": {
+  "items": [
+   {
+    "claim": "Silver Bulletin’s Trump approval page was updated on 2026-09-11 and reported Donald Trump’s net approval rating at -19.5, up from an all-time low of -20.6.",
+    "source": "S6 https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin",
+    "date": "2026-09-11",
+    "reliability": "A",
+    "credibility": 1,
+    "supports": "context",
+    "note": "This is the authoritative Silver Bulletin resolution source, but it is not December 2026 data."
+   },
+   {
+    "claim": "Silver Bulletin says it will regularly update the Trump approval charts as new polls come in, indicating the tracker was active as of 2026-09-11.",
+    "source": "S6 https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin",
+    "date": "2026-09-11",
+    "reliability": "A",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Does not determine the Dec. 31, 2026 value."
+   },
+   {
+    "claim": "No December 31, 2026 Silver Bulletin entry was found in the search results; the most recent relevant result available was dated 2026-09-11.",
+    "source": "S1 site:natesilver.net Silver Bulletin Trump approval December 2026 net approval",
+    "date": "2026-09-11",
+    "reliability": "F",
+    "credibility": 6,
+    "supports": "context",
+    "note": "Search-result summary only; not direct evidence of the future December value."
+   },
+   {
+    "claim": "No December 31, 2026 Silver Bulletin entry was found in the search results; the most recent relevant result available was dated 2026-09-11.",
+    "source": "S2 site:natesilver.net/p/trump-approval-ratings-nate-silver-bulletin December 31 2026 Trump net approval",
+    "date": "2026-09-11",
+    "reliability": "F",
+    "credibility": 6,
+    "supports": "context",
+    "note": "Search-result summary only; not direct evidence of the future December value."
+   },
+   {
+    "claim": "No December 2026 Silver Bulletin Trump approval entry could be verified from available sources; the month is in the future relative to the sources.",
+    "source": "S3 Silver Bulletin Trump approval latest available day in December 2026",
+    "date": "2026-09-11",
+    "reliability": "F",
+    "credibility": 6,
+    "supports": "context",
+    "note": "Not outcome-determining; only indicates lack of December data in available sources."
+   },
+   {
+    "claim": "Silver Bulletin’s Trump approval page was updated on 2026-08-27 and reported Donald Trump’s net approval rating at -19.5, up from an all-time low of -20.6.",
+    "source": "S4 Nate Silver Bulletin Trump approval 2026-12-31 net approval",
+    "date": "2026-08-27",
+    "reliability": "A",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Older authoritative datapoint; not the target date."
+   },
+   {
+    "claim": "Silver Bulletin’s Trump approval page was still being updated as of 2026-09-11 and there was no evidence it had ceased publishing Trump approval ratings.",
+    "source": "S5 Silver Bulletin ceased to publish Trump's approval rating 2026",
+    "date": "2026-09-11",
+    "reliability": "A",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Relevant to annulment only; does not resolve the December 31, 2026 value."
+   }
+  ],
+  "already_resolved_signal": ""
+ },
+ "members": [
+  {
+   "name": "gpt54_a",
+   "model": "openai/gpt-5.4",
+   "forecast": {
+    "kind": "numeric",
+    "probability": null,
+    "options": null,
+    "percentiles": {
+     "5": -29.0,
+     "10": -26.0,
+     "20": -23.0,
+     "40": -19.5,
+     "60": -17.2,
+     "80": -13.2,
+     "90": -10.2,
+     "95": -7.8
+    }
+   },
+   "reasoning": "1. **Hypotheses**\n\nLet H0 be the status-quo style outcome: Trump’s net approval on the resolving Silver Bulletin date in late Dec 2026 is near the current level and in his familiar band.\n\n- **H0:** Ends in the **mid/high negative teens**, about **-18 to -15**.\n- **H1:** Improves materially, ending **less negative than -15** (say **-14 to -5**).\n- **H2:** Worsens materially, ending **more negative than -18** (say **-19 to -35**).\n- **H3:** Procedural non-resolution path: Silver Bulletin ceases publishing and question is annulled.  \n  This matters operationally, but for the numeric forecast it appears low.\n\n2. **Evidence by hypothesis**\n\n- **E1 [A1]** Silver Bulletin on 2026-09-11 shows **-19.5**, up from all-time low **-20.6**.  \n  - Consistent with **H0/H2**.  \n  - Slightly contradicts **H1** because current level is already fairly low.  \n  - Strong evidence because A1 and directly from resolver source.\n\n- **E2 [A1]** Silver Bulletin says tracker will be regularly updated.  \n  - Consistent with **normal numeric resolution** and against **H3 annulment**.  \n  - Little directional effect on the value itself.\n\n- **E3/E4/E5 [F6]** No Dec 2026 entry found because future date.  \n  - Essentially irrelevant to numeric level.  \n  - Barely moves anything.\n\n- **E6 [A1]** 2026-08-27 also at **-19.5**, after low of **-20.6**.  \n  - Consistent with **sticky low approval**, favoring **H0/H2** over **H1**.  \n  - Strong because direct and recent, though partly redundant with E1.\n\n- **E7 [A1]** No evidence Silver Bulletin ceased publishing as of 2026-09-11.  \n  - Against **H3 annulment**.  \n  - No major effect on numeric center.\n\n3. **What must change for a non-status-quo outcome?**\n\nFor **H1** (improvement above roughly -15), Trump would need a sustained positive shift of ~5+ points from current **-19.5** over about 3.5 months. That is possible, but for a polarized incumbent with historically sticky ratings, it usually requires favorable macro/political developments or a rally event. I’d call that **plausible but less likely than not**.\n\nFor **H2** (drop below roughly -18), almost nothing dramatic must change: he is already at **-19.5**. A small additional deterioration, or simply remaining around current levels, gets you there. So relative to H0, **H2 is live and fairly competitive**.\n\nFor a strong move toward **0**, a very large approval rebound would be needed. Given Trump’s long-run polarized ceiling/floor structure, that seems **unlikely** in this time window.\n\nFor a move toward the lower bound **-35**, a major crisis or collapse would likely be needed. Also possible, but outside-view rare in 3.5 months.\n\n4. **Start from blind base rate and update**\n\nBlind base rate percentiles were centered around the **mid/high negative teens**:\n- p40 **-18**\n- p60 **-15**\n- median roughly around **-16.5 to -17**\n\nThe new evidence is important mainly because the current Silver Bulletin value is **-19.5**, a bit worse than the blind center, and because it has recently been near an all-time low (**-20.6**). That shifts me **downward by about 1.5 to 2 points** from the blind estimate.\n\nWhy not move more? Because:\n- presidential approval is sticky, but also mean-reverting after local extremes;\n- the latest note says **up from** the all-time low, hinting some stabilization rather than free fall;\n- the strongest outside-view anchor remains Trump’s persistent band roughly in the **-10 to -20** region.\n\nSo I update from a center near **-16.5/-17** to a center around **-18.5**.\n\n5. **Forecast**\n\nMy median forecast is **-18.4** net approval on the resolving Silver Bulletin date in late December 2026.\n\nFINAL: -18.4\n\n```json\n{\"percentiles\": {\"5\": -29.0, \"10\": -26.0, \"20\": -23.0, \"40\": -19.5, \"60\": -17.2, \"80\": -13.2, \"90\": -10.2, \"95\": -7.8}}\n```",
+   "stated_number": -18.4,
+   "cost_usd": 0.0199525,
+   "dropped_reason": null
+  },
+  {
+   "name": "gpt54_b",
+   "model": "openai/gpt-5.4",
+   "forecast": {
+    "kind": "numeric",
+    "probability": null,
+    "options": null,
+    "percentiles": {
+     "5": -28.5,
+     "10": -25.5,
+     "20": -22.5,
+     "40": -19.0,
+     "60": -16.5,
+     "80": -12.5,
+     "90": -9.5,
+     "95": -7.0
+    }
+   },
+   "reasoning": "1. **Hypotheses**\n\nLet H0 be the status-quo / base-case band, with alternatives on either side.\n\n- **H0:** End-December 2026 net approval is in Trump’s familiar negative band, roughly **-20 to -12**, centered near the high teens negative.\n- **H1:** **Lower than H0**, i.e. **below -20** (more unpopular; into low/mid -20s or worse).\n- **H2:** **Higher than H0**, i.e. **above -12** (material recovery toward single-digit negatives or near 0).\n- **H3:** Procedural edge case: Silver Bulletin stops publishing and the market is annulled.  \n  This is not a numeric outcome, but worth noting because the resolution source is exclusive.\n\n2. **Evidence vs hypotheses**\n\nKey point: only **A1** evidence should move us much. The F6 search-result items barely matter.\n\n- **E1 [A1]:** As of 2026-09-11, Silver Bulletin net approval is **-19.5**, up from all-time low **-20.6**.  \n  - **Consistent with H0:** yes, strongly. Current value sits right inside the H0 band.  \n  - **Consistent with H1:** somewhat; being near -20 means a further slide is plausible.  \n  - **Contradicts H2:** moderately, since current standing is far from a recovery to above -12.  \n  - **Weight:** high. This is the main update.\n\n- **E2 [A1]:** Tracker is being regularly updated.  \n  - Mostly procedural; supports normal resolution, not the numeric level.  \n  - Slightly contradicts H3 annulment.  \n  - **Weight:** modest but real.\n\n- **E3/E4/E5 [F6]:** No future December 2026 entry found.  \n  - Trivially consistent with all live numeric hypotheses; the date is in the future.  \n  - No meaningful evidentiary value.  \n  - **Weight:** negligible.\n\n- **E6 [A1]:** 2026-08-27 also at **-19.5**, after all-time low -20.6.  \n  - **Consistent with H0:** yes; suggests short-run stability around current level.  \n  - Slightly supports sticky approval dynamics, hence weighs against large jump to H2.  \n  - Slightly against sharp collapse into deep H1 tails as well, since there was some rebound from trough.  \n  - **Weight:** high, though partly redundant with E1.\n\n- **E7 [A1]:** No evidence Silver Bulletin ceased publishing as of 2026-09-11.  \n  - Contradicts H3 annulment.  \n  - **Weight:** modest.\n\n3. **What must change for a non-status-quo outcome?**\n\nFor **H1 (< -20)**:\n- Trump would need either a renewed downward drift from today’s -19.5 or a modest adverse shock.\n- Over ~3.5 months, a move of a few points downward is very plausible for any president, and especially when already near a local low.\n- So H1 does **not** require a huge regime change; only modest deterioration.\n\nFor **H2 (> -12)**:\n- Trump would need a sizable improvement of roughly **7.5+ points** from current -19.5.\n- That is a much larger move than the usual sticky-presidency baseline over a short horizon.\n- It likely requires a sustained favorable narrative, economic improvement, foreign-policy success, or opposition collapse.\n- Possible, but materially less likely than staying around current levels.\n\nFor a very deep H1 tail (say **below -26**):\n- That would require a major sustained negative shock, not just ordinary noise.\n- Possible but clearly lower probability.\n\nFor **H3 annulment**:\n- Silver Bulletin would have to cease publishing the tracker entirely.\n- Current evidence suggests continuation, so this seems unlikely.\n\n4. **Start from blind base rate and update**\n\nBlind base rate:\n- p5 -29\n- p10 -26\n- p20 -23\n- p40 -18\n- p60 -15\n- p80 -11\n- p90 -8\n- p95 -6\n\nThis blind view already centered on “mid/high negative teens with moderate dispersion.”\n\n**Update from evidence:**\n- The strongest live evidence is the current observed level **-19.5** and recent stability around there.\n- That pulls the distribution **a bit downward** relative to the blind center, because the current reading is worse than the blind median-ish expectation.\n- But not by much, because:\n  - Trump approval is historically sticky,\n  - there has been a slight rebound from the all-time low,\n  - and 3.5 months is enough for some movement, but usually not a dramatic reset absent major shocks.\n\nSo I move the center by roughly **1 to 2 points more negative** than the blind estimate and slightly tighten around the current band, while keeping a heavier lower tail than upper tail.\n\n5. **Forecast**\n\nMy median is **-17.8**.\n\nThis reflects:\n- status quo / mean persistence as the dominant scenario,\n- modest chance of further erosion into the low -20s,\n- smaller but real chance of recovery into around -10 to -12,\n- low chance of approaching 0 or dropping toward -30 without a major shock.\n\n**FINAL: -17.8**\n\n```json\n{\"percentiles\": {\"5\": -28.5, \"10\": -25.5, \"20\": -22.5, \"40\": -19.0, \"60\": -16.5, \"80\": -12.5, \"90\": -9.5, \"95\": -7.0}}\n```",
+   "stated_number": -17.8,
+   "cost_usd": 0.0229675,
+   "dropped_reason": null
+  },
+  {
+   "name": "sonnet46",
+   "model": "anthropic/claude-sonnet-4.6",
+   "forecast": {
+    "kind": "numeric",
+    "probability": null,
+    "options": null,
+    "percentiles": {
+     "5": -29.0,
+     "10": -26.0,
+     "20": -23.0,
+     "40": -19.5,
+     "60": -16.0,
+     "80": -12.0,
+     "90": -9.0,
+     "95": -6.5
+    }
+   },
+   "reasoning": "## Analysis of Competing Hypotheses\n\n### Hypotheses\n\n- **H0 (Status quo / mild drift):** Net approval remains near current level (~-19 to -16) by Dec 31, 2026\n- **H1 (Improvement):** Net approval improves significantly, moving toward -10 or above (closer to 0)\n- **H2 (Deterioration):** Net approval worsens, moving toward -25 or below (closer to -35)\n- **H3 (Stability):** Net approval stays very close to current ~-19.5\n\n### Evidence Assessment\n\n**E1 [A1]:** Trump's net approval is -19.5 as of Sep 11, 2026, up from all-time low of -20.6.\n- Consistent with H0, H3; slightly consistent with H1 (upward trend); weakly contradicts H2\n\n**E2 [A1]:** Silver Bulletin actively updating tracker.\n- Consistent with all hypotheses (tracker will produce a Dec 31 value)\n\n**E3-E5 [F6]:** No Dec 2026 data found — expected since it's the future.\n- No discriminating power\n\n**E6 [A1]:** Same as E1 essentially — -19.5 as of Aug 27, 2026.\n- Consistent with H3 (very stable at -19.5 for ~2 weeks)\n\n**E7 [A1]:** Silver Bulletin still publishing — no annulment risk.\n- Consistent with all hypotheses\n\n### What Must Change for Non-Status-Quo Outcomes\n\n- For H1 (improvement to -10 or better): Would require sustained positive news, economic improvement, or major rally event over ~3.5 months. Historically possible but not the base rate.\n- For H2 (deterioration to -25 or worse): Would require a major negative shock — recession, scandal, crisis. Possible given Trump's second-term volatility.\n- The current reading of -19.5 has been stable for weeks, suggesting stickiness.\n\n### Base Rate Update\n\nThe blind estimate centered around -15 to -18. Current data shows -19.5, which is slightly worse than the blind midpoint. The evidence of stability (same reading across ~2 weeks) supports H3/H0. The slight upward movement from -20.6 to -19.5 suggests mild positive drift.\n\nI'll shift the distribution slightly toward the current reading of -19.5, with moderate dispersion reflecting ~3.5 months of uncertainty. The distribution should be centered around -18 to -17 (slight mean reversion toward historical -15 to -20 range), with meaningful tails.\n\n**Movement from blind estimate:** Slight downward shift (worse) from blind center, given current reading of -19.5 vs. blind center of ~-17. But also accounting for possible mean reversion toward -15 range.\n\nMedian estimate: approximately **-17** (slight improvement from current -19.5 over 3.5 months, consistent with historical patterns)\n\nFINAL: -17\n\n```json\n{\"percentiles\": {\"5\": -29.0, \"10\": -26.0, \"20\": -23.0, \"40\": -19.5, \"60\": -16.0, \"80\": -12.0, \"90\": -9.0, \"95\": -6.5}}\n```",
+   "stated_number": -17.0,
+   "cost_usd": 0.018069,
+   "dropped_reason": null
+  },
+  {
+   "name": "grok46",
+   "model": "x-ai/grok-4.6",
+   "forecast": {
+    "kind": "numeric",
+    "probability": null,
+    "options": null,
+    "percentiles": {
+     "5": -26.0,
+     "10": -24.0,
+     "20": -22.0,
+     "40": -20.0,
+     "60": -18.0,
+     "80": -15.0,
+     "90": -13.0,
+     "95": -11.0
+    }
+   },
+   "reasoning": "The status-quo hypothesis (H0) is persistence of the recent Silver Bulletin net-approval level near -19.5, with only ordinary sampling/aggregation noise. Alternative hypotheses are a material improvement (toward the first-term band of roughly -10 to -15), a further deterioration (into the mid-to-high -20s), or a large shock that would push the series near the open bounds of 0 or -35.\n\nE1, E2, E6 and E7 (all A1) are fully consistent with H0 and with modest mean-reversion; they contradict only the extreme-shock tails. E3–E5 are non-informative (future dates). No A/B evidence currently favors a large directional break.\n\nBetween 14 Sep and 31 Dec the only high-probability events that could move the series more than a few points are the November midterms and ordinary economic or foreign-policy news. Midterm losses for the president’s party are the modal historical outcome and would, if anything, exert mild downward pressure; they are unlikely to produce a 10-point swing in a smoothed aggregator. First-term Trump approval was exceptionally sticky; the second-term series has already stabilized after its earlier decline. Consequently the probability of a non-status-quo realization remains modest.\n\nStarting from the outside-view (blind) distribution centered in the mid-teens, the September 2026 observations pull the location leftward by roughly 3 points and modestly compress the tails, producing a median of -19.\n\nFINAL: -19\n\n```json\n{\"percentiles\": {\"5\": -26.0, \"10\": -24.0, \"20\": -22.0, \"40\": -20.0, \"60\": -18.0, \"80\": -15.0, \"90\": -13.0, \"95\": -11.0}}\n```",
+   "stated_number": -19.0,
+   "cost_usd": 0.024924,
+   "dropped_reason": null
+  }
+ ],
+ "aggregate": {
+  "pre_da": {
+   "kind": "numeric",
+   "probability": null,
+   "options": null,
+   "percentiles": {
+    "5": -28.91283783656158,
+    "10": -25.833333332761903,
+    "20": -22.815789473933517,
+    "40": -19.510055865965757,
+    "60": -16.76923076923077,
+    "80": -12.780000000377147,
+    "90": -9.769230768723585,
+    "95": -7.110497237371789
+   }
+  },
+  "post_da": {
+   "kind": "numeric",
+   "probability": null,
+   "options": null,
+   "percentiles": {
+    "5": -28.0,
+    "10": -25.0,
+    "20": -22.0,
+    "40": -18.5,
+    "60": -15.5,
+    "80": -11.0,
+    "90": -8.0,
+    "95": -5.5
+   }
+  },
+  "method": "cdf_pointwise_median",
+  "da_critique": "Strongest red-team case: the team is probably too anchored to a stale point estimate around -19.5 and too confident that year-end 2026 will look similar, despite having almost no evidence about the intervening 3.5 months and no demonstrated trend model.\n\n1. The forecast appears excessively anchored to a single current reading\n- The central forecast is basically centered on the latest cited Silver Bulletin value of -19.5 from 2026-09-11 (E1) and 2026-08-27 (E6).\n- But E1 itself says -19.5 was “up from an all-time low of -20.6,” which is a directional signal the team may be underusing. If Trump has already rebounded ~1 point from the low, the best available momentum signal is slightly upward, not flat-to-worse.\n- A year-end value only ~2.7 points better than current at the median (-16.8 vs. -19.5) may still be too pessimistic if that rebound reflects a broader mean reversion from an extreme low rather than noise.\n\n2. The evidence quality is weak and partly duplicative\n- E3 and E4 are duplicates of the same “no December 31, 2026 entry found” point, which adds no real information.\n- E5 merely says December is in the future, which is tautological and should not inform the substantive distribution.\n- E2 and E7 only establish that the tracker was active as of 2026-09-11, not what approval will be on 2026-12-31.\n- So most cited evidence is about publication status, not the outcome variable. The forecast may therefore be overconfident relative to the actual informational base.\n\n3. The distribution may be too negative because it ignores reversion/base-rate dynamics after early-term troughs\n- E1/E6 imply Trump hit an “all-time low” of -20.6 and then improved to -19.5. Extreme readings often partially mean revert.\n- If the current level is already near the worst observed point, the base-rate case over the next few months is not necessarily “stay near the lows.” Without contrary evidence, a modest recovery is at least as plausible as renewed decline.\n- Yet the team places 40% probability below about -19.5 (p40 = -19.51), effectively saying current conditions are about the 40th percentile for year-end. That may understate the likelihood that September was near a local trough.\n\n4. The forecast likely underweights event risk and time remaining\n- There are more than three months between the latest observed value and resolution. That is enough time for salient political, economic, legislative, or international events to move approval several points in either direction.\n- However, the distribution is fairly tight for a polarizing approval series with event sensitivity: 10th to 90th percentile is only about 16 points (-25.8 to -9.8), and 40th to 60th is under 3 points.\n- If the team really has little beyond one current reading and a note of slight improvement (E1, E6), then confidence should be lower and central tendency should rely more on historical volatility/base rates than on point anchoring.\n\n5. A possible resolution-criterion misread: latest available day in December 2026\n- The resolution uses the latest available day in December 2026 if 12/31 itself is missing. That means holiday-period reporting gaps do not imply annullment or extra uncertainty about exact date.\n- Since E2 and E7 indicate active updating through September, publication-status uncertainty should matter less than the substantive approval path. If the team used publication uncertainty to justify wider downside or noise, that is misplaced.\n\n6. The asymmetry may be wrong in magnitude\n- The upper tail reaches only -7.1 at p95, while the lower tail goes to -28.9 at p5. Given current -19.5 and recent improvement from -20.6 (E1), that skew toward further deterioration may be exaggerated absent evidence of a worsening trend.\n- With no cited evidence of fresh scandals, recession, war deterioration, or policy collapse, a nearly 10-point downside from current at p5 may be too pessimistic relative to upside.\n\nBottom line: the team seems to have built a fairly precise, slightly improving but still very negative forecast from one latest reading plus weak metadata evidence. The strongest challenge is that they are over-anchored to -19.5 and underweighting mean reversion from an all-time low and ordinary 3-month volatility, which likely makes the center too negative and the downside too heavy.\n\nThe forecast should move upward by roughly 2–4 points net approval, with a somewhat wider distribution."
+ },
+ "final": {
+  "kind": "numeric",
+  "probability": null,
+  "options": null,
+  "percentiles": {
+   "5": -28.0,
+   "10": -25.0,
+   "20": -22.0,
+   "40": -18.5,
+   "60": -15.5,
+   "80": -11.0,
+   "90": -8.0,
+   "95": -5.5
+  }
+ },
+ "comment": "**Resolution forensics.** This question resolves to Donald Trump's net approval rating on December 31, 2026, according to data from the Silver Bulletin. If data for December 31, 2026 are not published by the Silver Bulletin, it resolves to Trump's net approval on the latest available day in December 2026. If Silver Bulletin ceases to publish Trump's approval rating, the question is annulled.\n\nStatus quo: If nothing changes, it resolves to the Silver Bulletin net approval figure for Donald Trump on December 31, 2026; if that exact date is unavailable, then the latest available day in December 2026 is used.. Traps: Only the Silver Bulletin is authoritative for resolution.; The metric is net approval, not approval alone or disapproval alone.; The operative date is 'on December 31, 2026,' with fallback only to the latest available day in December 2026..\n\n**Blind base rate.** End-of-year and monthly/quarterly net approval ratings for incumbent US presidents, especially highly polarized presidents, over ~3-4 month forecast windows; with extra weight on Donald Trump's own historically stable first-term approval pattern.. Estimate p5=-29; p10=-26; p20=-23; p40=-18; p60=-15; p80=-11; p90=-8; p95=-6.\n\n**Key evidence.** [A1] Silver Bulletin’s Trump approval page was updated on 2026-09-11 and reported Donald Trump’s net approval rating at -19.5, up from an all-time low of -20.6. (S6 https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin) | [A1] Silver Bulletin says it will regularly update the Trump approval charts as new polls come in, indicating the tracker was active as of 2026-09-11. (S6 https://www.natesilver.net/p/trump-approval-ratings-nate-silver-bulletin) | [A1] Silver Bulletin’s Trump approval page was updated on 2026-08-27 and reported Donald Trump’s net approval rating at -19.5, up from an all-time low of -20.6. (S4 Nate Silver Bulletin Trump approval 2026-12-31 net approval)\n\n**ACH ensemble** (gpt54_a, gpt54_b, sonnet46, grok46): p5=-28.9128; p10=-25.8333; p20=-22.8158; p40=-19.5101; p60=-16.7692; p80=-12.78; p90=-9.76923; p95=-7.1105 via cdf_pointwise_median.\n\n**Devil's advocate** moved it to p5=-28; p10=-25; p20=-22; p40=-18.5; p60=-15.5; p80=-11; p90=-8; p95=-5.5.\n\n**Final:** p5=-28; p10=-25; p20=-22; p40=-18.5; p60=-15.5; p80=-11; p90=-8; p95=-5.5\n\n_bot=XtremeSavageForecast stages=forensics,blind_base_rate,evidence_table,ach_forecast,devils_advocate cost=$0.30_",
+ "stage_costs": [
+  {
+   "stage": "forensics",
+   "model": "openai/gpt-5.4",
+   "cost_usd": 0.02377,
+   "seconds": 12.514999999955762
+  },
+  {
+   "stage": "blind_base_rate",
+   "model": "openai/gpt-5.4",
+   "cost_usd": 0.0115925,
+   "seconds": 9.938000000023749
+  },
+  {
+   "stage": "research",
+   "model": "openai/gpt-5.4-mini:online",
+   "cost_usd": 0.14884775,
+   "seconds": 15.061999999976251
+  },
+  {
+   "stage": "evidence_table",
+   "model": "openai/gpt-5.4-mini",
+   "cost_usd": 0.0058335,
+   "seconds": 5.110000000044238
+  },
+  {
+   "stage": "forecast_members",
+   "model": "ensemble",
+   "cost_usd": 0.085913,
+   "seconds": 62.73399999999674
+  },
+  {
+   "stage": "devils_advocate",
+   "model": "openai/gpt-5.4",
+   "cost_usd": 0.0223,
+   "seconds": 14.125
+  }
+ ],
+ "cost_usd": 0.29825675,
+ "guards_fired": [],
+ "published": true,
+ "error": null
+}

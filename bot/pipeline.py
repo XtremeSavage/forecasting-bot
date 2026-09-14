@@ -29,7 +29,7 @@ class CommentPostError(Exception):
 
 
 class Publisher(Protocol):
-    def is_open(self, post_id: int) -> bool: ...
+    def is_open(self, post_id: int, question_id: int | None = None) -> bool: ...
     def publish(self, q: QuestionSummary, value: ForecastValue, comment: str) -> None: ...
 
 
@@ -37,8 +37,16 @@ class MetaculusPublisher:
     def __init__(self, client: MetaculusClient) -> None:
         self.c = client
 
-    def is_open(self, post_id: int) -> bool:
-        q = self.c.get_question_by_post_id(post_id)
+    def is_open(self, post_id: int, question_id: int | None = None) -> bool:
+        # A post can be a question group (one post, several subquestions). The library's
+        # default lookup excludes groups and raises; ask for the subquestions unpacked and
+        # pick ours by question id. Seen live 2026-09-13 on bot-testing-area post 43322.
+        q = self.c.get_question_by_post_id(post_id, group_question_mode="unpack_subquestions")
+        if isinstance(q, list):
+            matches = [x for x in q if question_id is None or getattr(x, "id_of_question", None) == question_id]
+            if not matches:
+                return False
+            q = matches[0]
         now = datetime.now(timezone.utc)
         return q.state == QuestionState.OPEN and (q.close_time is None or q.close_time > now)
 
@@ -210,7 +218,7 @@ async def forecast_question(q: MetaculusQuestion, settings: Settings, llm: Llm, 
         # Publish gate
         if publisher is None:
             return rec
-        if not publisher.is_open(qs.post_id):
+        if not publisher.is_open(qs.post_id, qs.question_id):
             rec.guards_fired.append("PUBLISH_SKIPPED_CLOSED")
             return rec
         try:

@@ -1,0 +1,437 @@
+{
+ "question": {
+  "post_id": 43326,
+  "question_id": 43331,
+  "url": "https://www.metaculus.com/questions/43326",
+  "title": "Which party will hold the most seats in the US House of Representatives after the 2026 elections?",
+  "kind": "multiple_choice",
+  "close_time": "2026-11-02T00:00:00+00:00",
+  "options": [
+   "Democrats",
+   "Republicans",
+   "Other"
+  ],
+  "lower_bound": null,
+  "upper_bound": null,
+  "open_lower": null,
+  "open_upper": null,
+  "cdf_size": null,
+  "zero_point": null,
+  "unit": ""
+ },
+ "run_ts": "2026-09-14T00:51:13.499624+00:00",
+ "flags": {
+  "forensics": true,
+  "blind_base_rate": true,
+  "evidence_table": true,
+  "ach_forecast": true,
+  "devils_advocate": true
+ },
+ "forensics": {
+  "resolution_statement": "This question resolves to the party that 'holds more House of Representatives seats than any other party in the 120th Congress,' the House elected on November 3, 2026 and taking office January 3, 2027. It resolves 'Democrats' if Democrats hold more seats than Republicans and any other grouping after the 'final result of the elections, including special elections, recounts, or run-offs.' It resolves 'Republicans' if Republicans hold more seats than Democrats and any other grouping on that same basis. Independent representatives are 'counted as part of the party they caucus with.' It resolves 'Other' if 'Republicans and Democrats hold an equal number of seats,' if 'a third party holds more seats than both Republicans and Democrats,' if 'Independents that do not caucus with either party hold more seats than both Republicans and Democrats,' or if 'more seats are vacant than the ones held by both Republicans and Democrats.'",
+  "status_quo_outcome": "Republicans",
+  "key_dates": [
+   "2026-11-02T00:00:00+00:00 question close time",
+   "2026-11-03 scheduled 2026 US House election day",
+   "2027-01-03 120th Congress takes office",
+   "Final certification/recounts/run-offs/special elections date(s) as needed for the final result"
+  ],
+  "traps": [
+   "Resolution is based on the 120th Congress seat count, not current House composition or election-night projections.",
+   "The operative result is the 'final result of the elections, including special elections, recounts, or run-offs,' so preliminary calls do not settle it.",
+   "Independents who caucus with a major party are counted with that party, not as 'Other.'",
+   "A tie between Republicans and Democrats resolves as 'Other.'",
+   "Winning the House popular vote does not matter; only seats held matter.",
+   "Vacancies matter only under the explicit 'Other' condition that more seats are vacant than either party holds.",
+   "The question closes before election day in UTC, but resolution depends on later final outcomes."
+  ],
+  "possibly_already_resolved": false,
+  "already_resolved_reason": "",
+  "search_queries": [
+   "Metaculus Which party will hold the most seats in the US House of Representatives after the 2026 elections resolution",
+   "Clerk of the U.S. House 120th Congress party breakdown January 2027",
+   "Associated Press 2026 House election final seat count Democrats Republicans",
+   "Ballotpedia 2026 United States House of Representatives elections results seat totals",
+   "Federal Election Commission 2026 House election certified results party seat count"
+  ],
+  "things_that_do_not_count": [
+   "Election-night or media projections before recounts, run-offs, or special elections are complete.",
+   "The current 119th Congress seat balance.",
+   "National popular vote winner for House races.",
+   "An independent seat that caucuses with Democrats or Republicans being treated as 'Other.'",
+   "Temporary vacancies or unresolved contests before the final result is established."
+  ]
+ },
+ "blind": {
+  "reference_class": "US House elections since World War II, with emphasis on midterm elections in which one major party enters with a narrow majority. This is a class of roughly 40 postwar House elections, about 20 of them midterms, with a smaller subset of close-control cases.",
+  "base_rate_reasoning": "The broad postwar base rate in House midterms is that the president's party often loses seats, and close chambers are more likely to flip because only a small national swing is needed. The current House margin is extremely narrow (218-215 with 2 vacancies), so status quo control is only moderately sticky. Against that, House geography and incumbency advantages prevent making the opposition overwhelmingly likely. 'Other' is very unlikely because third-party control is essentially absent in the modern House and exact ties are rare, though not impossible.",
+  "forecast": {
+   "kind": "multiple_choice",
+   "probability": null,
+   "options": {
+    "Democrats": 0.57,
+    "Republicans": 0.41,
+    "Other": 0.02
+   },
+   "percentiles": null
+  }
+ },
+ "research": {
+  "sources": [
+   {
+    "provider": "web_search",
+    "url": null,
+    "title": "Metaculus Which party will hold the most seats in the US House of Representatives after the 2026 elections resolution",
+    "published": null,
+    "text": "- 2026-09-11: Metaculus’s current question page for “Which party will hold the most seats in the US House of Representatives after the 2026 elections?” shows the community prediction at **Democrats 87.5%, Republicans 12.4%, Other 0.1%**. ([metaculus.com](https://www.metaculus.com/questions/36369/us-house-plurality-after-2026-midterms/?utm_source=openai)) https://www.metaculus.com/questions/36369/us-house-plurality-after-2026-midterms/\n- 2026-09-11: Metaculus’s question feed lists the same question among active election forecasts and shows a very similar community prediction of **Democrats 88%, Republicans 11.9%, Other 0.1%**. ([metaculus.com](https://www.metaculus.com/questions/?for_main_feed=false&leaderboard_tags=2025_2026_leaderboard&utm_source=openai)) https://www.metaculus.com/questions/?for_main_feed=false&leaderboard_tags=2025_2026_leaderboard\n- 2026-09-11: A Metaculus user profile page that links to this question shows another near-identical snapshot: **Democrats 69.8%, Republicans 27.8%, Other 2.4%**; this appears to reflect a different forecaster’s page, not the sitewide aggregate. ([metaculus.com](https://www.metaculus.com/accounts/profile/117502/questions/?utm_source=openai)) https://www.metaculus.com/accounts/profile/117502/questions/\n- 2026-09-11: Another Metaculus profile page showing the same question lists the community prediction at **Democrats 87.5%, Republicans 12.4%, Other 0.1%**. ([metaculus.com](https://www.metaculus.com/accounts/profile/115666/questions/?utm_source=openai)) https://www.metaculus.com/accounts/profile/115666/questions/\n\n"
+   },
+   {
+    "provider": "web_search",
+    "url": null,
+    "title": "Clerk of the U.S. House 120th Congress party breakdown January 2027",
+    "published": null,
+    "text": "- **2026-07-20** — The House Historian’s “Party Divisions” table lists the **119th Congress (2025–2027)** as **435 seats: 215 Republicans, 220 Democrats, 0 other, 5 delegates/resident commissioner**. This is the most relevant official party-breakdown source I found; I did **not** find a published “120th Congress” breakdown from the Clerk because the 120th Congress has not yet begun as of the source material. Source: https://history.house.gov/Institution/Party-Divisions/Party-Divisions/ ([history.house.gov](https://history.house.gov/Institution/Party-Divisions/Party-Divisions/?nl=paul-krugman&te=1))\n\n- **2026-09-02** — The House Radio-Television Gallery “Party Breakdown” page shows the **current House membership** as **218 Republicans, 214 Democrats, 1 Independent, and 2 vacancies**; it also notes **Whole Number of the House: 433** and is marked “Last updated 9/2/26.” Source: https://radiotv.house.gov/house-data/party-breakdown ([radiotv.house.gov](https://radiotv.house.gov/house-data/party-breakdown))\n\n- **2026-09-14** — The Clerk’s election-information page confirms that the Office of the Clerk publishes official election statistics and links to the **“Statistics of the 2024 Presidential and Congressional Election”** for the **119th Congress**, not the 120th. Source: https://clerk.house.gov/Members/ViewElectionInformation ([clerk.house.gov](https://clerk.house.gov/Members/ViewElectionInformation))"
+   },
+   {
+    "provider": "web_search",
+    "url": null,
+    "title": "Associated Press 2026 House election final seat count Democrats Republicans",
+    "published": null,
+    "text": "- 2026-09-14 — I found an AP elections explainer and AP election coverage pages, but **not a standalone AP article giving the final 2026 House seat count for Democrats vs. Republicans** in the search results I could access. The most relevant AP material I found is AP’s elections coverage and AP’s explanation of how it declares winners, which says AP counts race by race and that 218 seats are needed for House control. Source: https://www.ap.org/elections/ and https://www.ap.org/elections/our-role-in-the-u-s-elections/how-we-declare-winners/ ([ap.org](https://www.ap.org/elections/?utm_source=openai))\n\n- 2026-09-14 — AP’s 2026 House-election coverage pages discuss the race for control of the chamber, but the snippets available in search did **not** include a final seat tally. Source: https://www.ap.org/news-highlights/elections/2026/jeffries-job-grows-more-difficult-in-race-for-house-and-speakers-gavel/ ([ap.org](https://www.ap.org/news-highlights/elections/2026/jeffries-job-grows-more-difficult-in-race-for-house-and-speakers-gavel/?utm_source=openai))\n\n- 2026-09-14 — A House Radio-Television Gallery party breakdown page shows the current chamber breakdown as **218 Republicans and 214 Democrats** with vacancies/delegates listed separately, but this is **not an AP source** and is not presented as the AP final 2026 election result. Source: https://radiotv.house.gov/house-data/party-breakdown ([radiotv.house.gov](https://radiotv.house.gov/house-data/party-breakdown?utm_source=openai))\n\n- 2026-09-14 — The search results also surfaced an AP story saying Republicans were campaigning to keep their House majority, but again it did **not** provide the final seat count in the accessible snippet. Source: https://apnews.com/article/4127f86db9aa557ae9316913aed7d80e ([apnews.com](https://apnews.com/article/4127f86db9aa557ae9316913aed7d80e?utm_source=openai))\n\nIf you want, I can keep searching specifically for an AP article or AP election-results page that explicitly states the final Democrat/Republican House seat total."
+   },
+   {
+    "provider": "web_search",
+    "url": null,
+    "title": "Ballotpedia 2026 United States House of Representatives elections results seat totals",
+    "published": null,
+    "text": "- 2026-07-23 — Ballotpedia reported that **59 U.S. Representatives** were not running for re-election in 2026, and that this was the **most since at least 2000**. The piece also said this was **32% more than the 53 who did not run in 2024**. Source: https://news.ballotpedia.org/2026/07/23/seventy-members-of-the-u-s-congress-are-not-running-for-re-election-this-year-the-most-in-at-least-26-years/ ([news.ballotpedia.org](https://news.ballotpedia.org/2026/07/23/seventy-members-of-the-u-s-congress-are-not-running-for-re-election-this-year-the-most-in-at-least-26-years/))\n\n- 2026-03-12 — Ballotpedia reported that **all 435 U.S. House districts are up for election in 2026** and that, as of 2026-03-05, **54 incumbents** were not running for re-election. Source: https://news.ballotpedia.org/2026/03/12/u-s-house-races-see-democrats-in-more-contests-than-republicans/ ([news.ballotpedia.org](https://news.ballotpedia.org/2026/03/12/u-s-house-races-see-democrats-in-more-contests-than-republicans/))\n\n- 2026-03-12 — Ballotpedia reported that, as of 2026-03-10, **3 races had no Democrat** and **35 had no Republican**. Source: https://news.ballotpedia.org/2026/03/12/u-s-house-races-see-democrats-in-more-contests-than-republicans/ ([news.ballotpedia.org](https://news.ballotpedia.org/2026/03/12/u-s-house-races-see-democrats-in-more-contests-than-republicans/))\n\n- 2026-03-12 — Ballotpedia reported the specific races without a Democratic candidate: **New Jersey’s 11th**, **Rhode Island’s 1st**, and **Wyoming’s at-large** district. Source: https://news.ballotpedia.org/2026/03/12/u-s-house-races-see-democrats-in-more-contests-than-republicans/ ([news.ballotpedia.org](https://news.ballotpedia.org/2026/03/12/u-s-house-races-see-democrats-in-more-contests-than-republicans/))\n\nIf you want, I can do a second pass focused specifically on **official election-result pages** once 2026 House results are available."
+   },
+   {
+    "provider": "web_search",
+    "url": null,
+    "title": "Federal Election Commission 2026 House election certified results party seat count",
+    "published": null,
+    "text": "- 2026-09-11 — The FEC says it publishes **Federal Elections**, a biennial compilation of **official, certified federal election results** from state election offices and other official sources, including House results; however, the FEC’s election-results pages indicate the **latest publicly posted Federal Elections reports are for 2022 and earlier**, so I did **not** find a certified 2026 House party seat-count report on the FEC site yet. Source: https://www.fec.gov/press/resources-journalists/elections/ ([fec.gov](https://www.fec.gov/press/resources-journalists/elections/?utm_source=openai))\n- 2026-09-11 — The FEC’s election-results page states that **state election offices are responsible for certifying results**, and that the FEC compiles results from **past** federal elections as officially reported by states/territories; it does **not** provide 2026 House certified results there. Source: https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/ ([fec.gov](https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/?utm_source=openai))\n- 2026-09-11 — The FEC’s House elections data page for **2026** exists, but it is a candidate/elections data page, not a certified party seat-count results publication. Source: https://www.fec.gov/data/elections/house/2026/ ([fec.gov](https://www.fec.gov/data/elections/house/2026/?utm_source=openai))\n- 2026-09-11 — The FEC’s election-date information confirms the **next regularly scheduled federal general election date is 2026-11-03**, which is consistent with the absence of any certified 2026 House general-election results yet. Source: https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/ ([fec.gov](https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/?utm_source=openai))\n\nI did not find an official, primary-source FEC page with **certified 2026 House party seat counts** as of now."
+   }
+  ],
+  "diagnostics": {}
+ },
+ "evidence": {
+  "items": [
+   {
+    "claim": "Metaculus community forecast currently gives Democrats the highest share for the 2026 House plurality question, at 87.5%, ahead of Republicans at 12.4% and Other at 0.1%.",
+    "source": "S1 https://www.metaculus.com/questions/36369/us-house-plurality-after-2026-midterms/",
+    "date": "2026-09-11",
+    "reliability": "F",
+    "credibility": 6,
+    "supports": "Democrats",
+    "note": "Forecast/community prediction, not an election result; source is a forecasting platform and may reflect third-party model output."
+   },
+   {
+    "claim": "A Metaculus question feed shows the same House plurality question with community prediction Democrats 88%, Republicans 11.9%, Other 0.1%.",
+    "source": "S1 https://www.metaculus.com/questions/?for_main_feed=false&leaderboard_tags=2025_2026_leaderboard",
+    "date": "2026-09-11",
+    "reliability": "F",
+    "credibility": 6,
+    "supports": "Democrats",
+    "note": "Forecast/community prediction only; not outcome evidence."
+   },
+   {
+    "claim": "A Metaculus user profile page linked to the question shows an individual forecast snapshot of Democrats 69.8%, Republicans 27.8%, Other 2.4%.",
+    "source": "S1 https://www.metaculus.com/accounts/profile/117502/questions/",
+    "date": "2026-09-11",
+    "reliability": "F",
+    "credibility": 6,
+    "supports": "Democrats",
+    "note": "Individual user forecast, not a final result; weaker than sitewide aggregate."
+   },
+   {
+    "claim": "Another Metaculus profile page shows the community prediction at Democrats 87.5%, Republicans 12.4%, Other 0.1%.",
+    "source": "S1 https://www.metaculus.com/accounts/profile/115666/questions/",
+    "date": "2026-09-11",
+    "reliability": "F",
+    "credibility": 6,
+    "supports": "Democrats",
+    "note": "Forecast/community prediction only; not an outcome."
+   },
+   {
+    "claim": "The House Historian's Party Divisions table lists the 119th Congress as 215 Republicans and 220 Democrats, with 0 other and 5 delegates/resident commissioner.",
+    "source": "S2 https://history.house.gov/Institution/Party-Divisions/Party-Divisions/",
+    "date": "2026-07-20",
+    "reliability": "A",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Official historical breakdown, but for the 119th Congress rather than the resolved 120th Congress."
+   },
+   {
+    "claim": "The House Radio-Television Gallery party breakdown page shows the current House membership as 218 Republicans, 214 Democrats, 1 Independent, and 2 vacancies; Whole Number of the House is 433.",
+    "source": "S2 https://radiotv.house.gov/house-data/party-breakdown",
+    "date": "2026-09-02",
+    "reliability": "A",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Current chamber composition, not the post-2026 election final result."
+   },
+   {
+    "claim": "The Clerk's election-information page confirms the Office of the Clerk publishes official election statistics and links to the Statistics of the 2024 Presidential and Congressional Election for the 119th Congress, not the 120th.",
+    "source": "S2 https://clerk.house.gov/Members/ViewElectionInformation",
+    "date": "2026-09-14",
+    "reliability": "A",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Shows official 120th Congress results are not yet published on that page."
+   },
+   {
+    "claim": "AP elections coverage explains how it declares winners and notes that 218 seats are needed for House control.",
+    "source": "S3 https://www.ap.org/elections/",
+    "date": "2026-09-14",
+    "reliability": "B",
+    "credibility": 1,
+    "supports": "context",
+    "note": "General explanatory material, not a final seat count."
+   },
+   {
+    "claim": "AP's 2026 House-election coverage discusses the race for control of the chamber, but accessible snippets do not include a final seat tally.",
+    "source": "S3 https://www.ap.org/news-highlights/elections/2026/jeffries-job-grows-more-difficult-in-race-for-house-and-speakers-gavel/",
+    "date": "2026-09-14",
+    "reliability": "B",
+    "credibility": 6,
+    "supports": "context",
+    "note": "No final result stated in accessible snippet."
+   },
+   {
+    "claim": "AP search results surfaced a story saying Republicans were campaigning to keep their House majority, but the accessible snippet did not provide the final seat count.",
+    "source": "S3 https://apnews.com/article/4127f86db9aa557ae9316913aed7d80e",
+    "date": "2026-09-14",
+    "reliability": "B",
+    "credibility": 6,
+    "supports": "context",
+    "note": "No outcome claim in accessible snippet."
+   },
+   {
+    "claim": "Ballotpedia reported that 59 U.S. Representatives were not running for re-election in 2026, the most since at least 2000.",
+    "source": "S4 https://news.ballotpedia.org/2026/07/23/seventy-members-of-the-u-s-congress-are-not-running-for-re-election-this-year-the-most-in-at-least-26-years/",
+    "date": "2026-07-23",
+    "reliability": "C",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Structural election context only."
+   },
+   {
+    "claim": "Ballotpedia reported that all 435 U.S. House districts are up for election in 2026 and that 54 incumbents were not running for re-election as of 2026-03-05.",
+    "source": "S4 https://news.ballotpedia.org/2026/03/12/u-s-house-races-see-democrats-in-more-contests-than-republicans/",
+    "date": "2026-03-05",
+    "reliability": "C",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Context only."
+   },
+   {
+    "claim": "Ballotpedia reported that as of 2026-03-10, 3 races had no Democrat and 35 had no Republican.",
+    "source": "S4 https://news.ballotpedia.org/2026/03/12/u-s-house-races-see-democrats-in-more-contests-than-republicans/",
+    "date": "2026-03-10",
+    "reliability": "C",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Contest field context, not final seat outcome."
+   },
+   {
+    "claim": "Ballotpedia reported the races without a Democratic candidate were New Jersey's 11th, Rhode Island's 1st, and Wyoming's at-large district.",
+    "source": "S4 https://news.ballotpedia.org/2026/03/12/u-s-house-races-see-democrats-in-more-contests-than-republicans/",
+    "date": "2026-03-12",
+    "reliability": "C",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Candidate-field context, not final outcome."
+   },
+   {
+    "claim": "The FEC says it publishes official, certified federal election results in Federal Elections compilations, but its latest publicly posted reports are for 2022 and earlier, so no certified 2026 House party seat-count report was found there yet.",
+    "source": "S5 https://www.fec.gov/press/resources-journalists/elections/",
+    "date": "2026-09-11",
+    "reliability": "A",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Indicates absence of official certified 2026 results at time of source."
+   },
+   {
+    "claim": "The FEC election-results page states that state election offices certify results and that the FEC compiles results from past federal elections; it does not provide 2026 House certified results there.",
+    "source": "S5 https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/",
+    "date": "2026-09-11",
+    "reliability": "A",
+    "credibility": 1,
+    "supports": "context",
+    "note": "No final 2026 result available."
+   },
+   {
+    "claim": "The FEC's House elections data page for 2026 exists but is a candidate/elections data page rather than a certified party seat-count results publication.",
+    "source": "S5 https://www.fec.gov/data/elections/house/2026/",
+    "date": "2026-09-11",
+    "reliability": "A",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Not a result page."
+   },
+   {
+    "claim": "The FEC confirms the next regularly scheduled federal general election date is 2026-11-03.",
+    "source": "S5 https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/",
+    "date": "2026-11-03",
+    "reliability": "A",
+    "credibility": 1,
+    "supports": "context",
+    "note": "Election timing context only."
+   }
+  ],
+  "already_resolved_signal": ""
+ },
+ "members": [
+  {
+   "name": "gpt54_a",
+   "model": "openai/gpt-5.4",
+   "forecast": {
+    "kind": "multiple_choice",
+    "probability": null,
+    "options": {
+     "Democrats": 0.74,
+     "Republicans": 0.25,
+     "Other": 0.01
+    },
+    "percentiles": null
+   },
+   "reasoning": "1. **Hypotheses**\n- **H0: Republicans** hold the most seats in the 120th House.\n- **H1: Democrats** hold the most seats.\n- **H2: Other** resolves (tie, third party plurality, non-caucusing independents plurality, or extreme vacancies).\n\n2. **Evidence by hypothesis**\n\nHigh-weight evidence here is mostly structural/contextual; the direct “Democrats 87.5%” items are low-grade because they are just other forecasts.\n\n- **E5/E6 (A1): current House composition is extremely close; one source in July showed Democrats ahead due to special-election timing, another in Sept shows 218 R / 214 D / 1 I / 2 vacancies.**\n  - Consistent with **H0 and H1**: narrow chamber means either major party can end up with plurality after the general election.\n  - Contradicts **H2** somewhat: “Other” remains hard because almost all seats are two-party.\n  - Net: modest support for a competitive race, not for either side decisively.\n\n- **E11/E12 (C1): very high retirements / open seats.**\n  - Consistent with **H1** more than H0, because open seats reduce incumbency protection and make flips easier in a narrowly divided chamber.\n  - Also consistent with general volatility.\n  - Weak-moderate evidence only.\n\n- **E13/E14 (C1): many more districts lacked a Republican candidate than lacked a Democratic one early in the cycle.**\n  - Consistent with **H1**, since uncontested or one-sided filing patterns imply Democrats are defending/contesting a broader map.\n  - Contradicts **H0** slightly.\n  - Still only modest weight; many of those seats are structurally safe anyway.\n\n- **E1/E2/E4 (F6): Metaculus community around 87.5–88% Democrats.**\n  - Strongly consistent with **H1**, contradictory to **H0**.\n  - But by instruction, F/6 evidence barely moves me. It is useful as a summary that many forecasters think late-cycle evidence favors Democrats, but I should not import it wholesale.\n\n- **E3 (F6): one individual forecaster at ~70% Democrats.**\n  - Same direction as above, very low weight.\n\n- **E7/E8/E9/E10/E15/E16/E17/E18**\n  - Mostly procedural/context only.\n  - They do not materially discriminate among **H0/H1**, except reinforcing that resolution is by final seat counts, not current composition or projections.\n\n3. **What must change for a non-status-quo outcome?**\n\nStatus quo is **Republicans**.\n\nFor **Democrats** to win plurality, they need a net gain of only a handful of seats from a very narrow starting point. In practice, with all 435 up, they just need to finish ahead in the final seat count. That requires:\n- a modest national environment favoring Democrats,\n- efficient distribution of gains in competitive districts,\n- and no major late break toward Republicans.\n\nGiven the tiny current margin and high number of open seats, that is quite plausible in the time left.\n\nFor **Other** to occur, one of the following must happen:\n- exact R-D tie,\n- third party or non-caucusing independents exceed both parties,\n- or vacancies exceed both major-party seat counts.\nThis is extraordinarily unlikely. Only the tie route is remotely live, and even that is rare.\n\n4. **Update from blind base rate**\n\nBlind prior:\n- Democrats 0.57\n- Republicans 0.41\n- Other 0.02\n\nHow I update:\n- The **current closeness** of the House supports the blind view that a flip is quite feasible, but does not itself strongly favor Democrats over Republicans.\n- **Open-seat/retirement data** nudges toward Democrats because fragile incumbent advantages matter more when many incumbents leave.\n- **Candidate-coverage asymmetry** also mildly favors Democrats.\n- The very lopsided **Metaculus community** forecast is too low-quality to accept at face value, but it is enough to nudge me further toward Democrats rather than away from them.\n\nI therefore move **somewhat**, but not all the way to the crowd’s ~88%. Given the instruction to avoid extremes without decisive evidence and to give extra weight to status quo, I still leave Republicans with a meaningful chance.\n\n5. **Forecast**\n\nTop hypothesis is **Democrats**, but not near-certainty.  \n**Other** remains tiny but above zero because a tie is possible.\n\nFINAL: 0.74\n\n```json\n{\"options\": {\"Democrats\": 0.74, \"Republicans\": 0.25, \"Other\": 0.01}}\n```",
+   "stated_number": 0.74,
+   "cost_usd": 0.021805,
+   "dropped_reason": null
+  },
+  {
+   "name": "gpt54_b",
+   "model": "openai/gpt-5.4",
+   "forecast": {
+    "kind": "multiple_choice",
+    "probability": null,
+    "options": {
+     "Democrats": 0.62,
+     "Republicans": 0.36,
+     "Other": 0.02
+    },
+    "percentiles": null
+   },
+   "reasoning": "1. **Hypotheses**\n- **H0: Republicans** hold the most seats in the 120th House.  \n- **H1: Democrats** hold the most seats.  \n- **H2: Other** resolves: tie, third party plurality, non-caucusing independents plurality, or vacancies exceeding both parties.\n\n2. **Evidence assessment**\n- **E5/E6 (A1 official current composition)**: current House is extremely close, with Republicans narrowly ahead in current membership.  \n  - Consistent with **H0** as status quo.\n  - Also consistent with **H1** because a tiny swing flips control.\n  - Contradicts **H2** except very weakly; “Other” remains structurally rare.\n  - Net: modest support for H0 from incumbency/status quo, but narrow margin limits that support.\n\n- **E11/E12 (C1 many retirements / all seats up)**:\n  - Consistent with **H1** and **H0** both, but high retirements reduce incumbency protection and make change easier.\n  - Slightly undermines **H0** because a narrow majority is less sticky when many incumbents retire.\n  - Little relevance to **H2**.\n  - Net: small anti-status-quo push.\n\n- **E13/E14 (C1 filing asymmetry: more races without GOP candidates than without Dems, as of March)**:\n  - Slightly supports **H1** because Democrats are contesting more seats.\n  - Slightly contradicts **H0**.\n  - But early ballot-access data are weak predictors of the final seat plurality.\n  - No meaningful support for **H2**.\n  - Net: small Democratic lean.\n\n- **E1/E2/E4 (F6 Metaculus community ~88% Democrats)**:\n  - Strongly consistent with **H1**, contradict **H0**.\n  - But by instruction, F6 barely moves me; this is mostly aggregated opinion rather than direct resolution evidence.\n  - Still, as a crowd synthesis it is not worthless: it suggests informed forecasters see a materially Democratic environment.\n  - Little effect on **H2** except pushing it very low.\n\n- **E3 (F6 individual forecast snapshot)**:\n  - Weak support for **H1** over **H0**.\n  - Barely moves anything.\n\n- **E7-E10, E15-E18**:\n  - Mostly procedural/contextual. They confirm that no official final result exists yet and remind us resolution is about final seat counts after all contests are settled.\n  - Essentially neutral among hypotheses.\n\n3. **What must change for a non-status-quo outcome?**\nFor **H1 Democrats** to occur, they need a net gain of only a handful of seats relative to the current balance. With a chamber this tight, a modest national swing, ordinary midterm dynamics, retirements, and candidate-quality differences can do it. That is quite plausible in the time left.\n\nFor **H2 Other**, something unusual must happen: an exact tie, or highly abnormal vacancy/independent outcomes. That requires special circumstances beyond the normal electoral process. Possible, but unlikely.\n\nSo the non-status-quo outcome **Democrats** needs only a modest shift; **Other** needs an unusually weird outcome.\n\n4. **Update from base rate**\n- Blind outside view: **Democrats 0.57 / Republicans 0.41 / Other 0.02**.\n- Status quo consideration argues against overreacting: Republicans currently hold the edge, and House geography often advantages them.\n- But the chamber is extremely close, retirements are elevated, and the weak-but-directional evidence points toward Democrats.\n- The Metaculus crowd at ~88% Democrats is too extreme for me given the evidence quality provided here; I would not follow it nearly all the way.\n- Relative to the blind base rate, I update **somewhat toward Democrats**, mainly because:\n  1. the majority is very narrow,\n  2. structural conditions make flips easier than usual,\n  3. nothing in the high-grade evidence shows Republicans have materially consolidated their edge.\n\nSo I move from 57% Democrats to the low 60s, not the high 80s.\n\n5. **Forecast**\nTop outcome is **Democrats**, but not overwhelmingly. Republicans remain quite live due to status quo, district geography, and the fact that only a plurality of seats matters. “Other” stays very low but above zero because ties in a 435-seat chamber are possible.\n\nFINAL: 0.62\n\n```json\n{\"options\": {\"Democrats\": 0.62, \"Republicans\": 0.36, \"Other\": 0.02}}\n```",
+   "stated_number": 0.62,
+   "cost_usd": 0.017518,
+   "dropped_reason": null
+  },
+  {
+   "name": "sonnet46",
+   "model": "anthropic/claude-sonnet-4.6",
+   "forecast": {
+    "kind": "multiple_choice",
+    "probability": null,
+    "options": {
+     "Democrats": 0.79,
+     "Republicans": 0.19,
+     "Other": 0.02
+    },
+    "percentiles": null
+   },
+   "reasoning": "I'll apply analysis of competing hypotheses systematically.\n\n## Hypotheses\n- **H0 (Republicans)**: Republicans retain House majority in 120th Congress (status quo)\n- **H1 (Democrats)**: Democrats win House majority in 120th Congress\n- **H2 (Other)**: Tie, third party, or other scenario\n\n## Evidence Analysis\n\n**High-reliability evidence (A/B grade):**\n- E6 [A1]: Current House is 218R, 214D, 1I, 2 vacancies — confirms narrow Republican margin\n- E8/E9/E10 [B]: AP coverage discusses competitive race for control, Republicans campaigning to keep majority\n- E11/E12/E13 [C1]: 59 incumbents not running, Democrats contesting more races — suggests Democratic offensive posture\n\n**Low-reliability evidence (F grade — barely moves needle):**\n- E1/E2/E3/E4 [F6]: Metaculus community at ~87-88% Democrats. These are prediction market signals but low source reliability grade. However, the *content* reflects aggregated forecaster judgment which has informational value.\n\n## What Must Change for Non-Status-Quo\nFor Democrats to win: Net swing of ~3+ seats toward Democrats (need 218). Given narrow 218-214 margin, a very small national swing suffices. Historical midterm pattern strongly favors the opposition party (Democrats here, opposing Trump's second term).\n\nFor Other: Extremely unlikely — requires exact tie or third-party surge.\n\n## Updating from Blind Base Rate\n\n**Blind base rate**: Democrats 0.57, Republicans 0.41, Other 0.02\n\n**Key updates:**\n1. The Metaculus community at ~88% Democrats is a strong signal, even with F-grade source reliability. Prediction markets/aggregators tend to be well-calibrated.\n2. Historical midterm pattern: President's party (Republicans) typically loses seats. With only a 4-seat margin, Democrats need minimal swing.\n3. AP coverage framing Republicans as defending majority suggests competitive environment favoring Democrats.\n4. High incumbent retirement rate (59) could benefit challengers.\n5. The blind base rate already favored Democrats at 57%.\n\nThe Metaculus community signal at 87-88% is quite strong. Even discounting for the F-grade source reliability, the underlying forecaster wisdom and historical base rates both point strongly toward Democrats. I'll move significantly toward Democrats but not fully to 88%, given:\n- We're still ~7 weeks from election day\n- Uncertainty remains\n- Status quo bias deserves some weight\n- The F-grade on sources means I shouldn't fully trust the 88% figure\n\nI'll land around 78-80% for Democrats.\n\nFINAL: 0.79\n\n```json\n{\"options\": {\"Democrats\": 0.79, \"Republicans\": 0.19, \"Other\": 0.02}}\n```",
+   "stated_number": 0.79,
+   "cost_usd": 0.019227,
+   "dropped_reason": null
+  },
+  {
+   "name": "grok46",
+   "model": "x-ai/grok-4.6",
+   "forecast": {
+    "kind": "multiple_choice",
+    "probability": null,
+    "options": {
+     "Democrats": 0.62,
+     "Republicans": 0.36,
+     "Other": 0.02
+    },
+    "percentiles": null
+   },
+   "reasoning": "1. Hypotheses: H0 = Republicans hold the most seats in the 120th House (status quo). H1 = Democrats hold the most seats. H2 = Other (tie, third-party plurality, non-caucusing independents, or vacancies exceeding either party's seats).\n\n2. Evidence mapping: A1/B1 items (current 119th composition, Clerk/FEC confirmation that 2026 results do not yet exist, election date) are consistent with all three hypotheses and contradict none; they merely establish a razor-thin R edge today and that resolution is still future. C1 items (high retirements, some uncontested races) raise variance and are therefore slightly more consistent with H1 than H0 (open seats weaken incumbency stickiness) while remaining compatible with H2. F6 Metaculus snapshots are consistent with H1 but, per grading, receive negligible weight and do not move probabilities.\n\n3. For a non-status-quo outcome, Democrats must net at least 3–6 seats (exact threshold depends on remaining vacancies and caucusing independents) on 3 Nov. With seven weeks remaining, candidate filing, generic-ballot fundamentals, and the historical midterm penalty for the president's party are already largely locked in; only a late, large national swing toward Republicans would preserve H0. That swing is possible but not the modal path.\n\n4. Blind base rate (post-war close midterms) already embeds the presidential-party penalty and modest status-quo stickiness: 0.57/0.41/0.02. High open-seat count and the narrow starting margin produce a small further update toward H1; A-grade evidence supplies no contradictory polling or structural lock. Resulting posterior stays well inside the 0.05–0.95 calibration band.\n\n5. Forecast: Democrats 0.62, Republicans 0.36, Other 0.02.\n\nFINAL: 0.62\n```json\n{\"options\": {\"Democrats\": 0.62, \"Republicans\": 0.36, \"Other\": 0.02}}\n```",
+   "stated_number": 0.62,
+   "cost_usd": 0.023072,
+   "dropped_reason": null
+  }
+ ],
+ "aggregate": {
+  "pre_da": {
+   "kind": "multiple_choice",
+   "probability": null,
+   "options": {
+    "Democrats": 0.666318407960199,
+    "Republicans": 0.3043781094527363,
+    "Other": 0.02930348258706468
+   },
+   "percentiles": null
+  },
+  "post_da": {
+   "kind": "multiple_choice",
+   "probability": null,
+   "options": {
+    "Democrats": 0.6017,
+    "Republicans": 0.3495,
+    "Other": 0.04880000000000002
+   },
+   "percentiles": null
+  },
+  "method": "option_median",
+  "da_critique": "Strongest red-team case: the forecast is probably too favorable to Democrats, mainly because it appears to lean heavily on weak or circular evidence and underweight structural/base-rate considerations that make Republicans more live than 30%.\n\n1. The main pro-Democratic evidence is low-grade and potentially duplicative\n- E1, E2, and E4 are effectively the same signal: Metaculus community output on the very question being forecast. Counting all three as separate support risks triple-counting one source.\n- E3 is just an individual Metaculus user snapshot, and notably it is much less bullish on Democrats than the community aggregate: 69.8% Democrats, 27.8% Republicans, 2.4% Other. If anything, E3 weakly suggests uncertainty is higher than the team forecast implies.\n- So the forecast’s headline support for Democrats rests mostly on “other forecasters think so,” not on independent election fundamentals or district-by-district evidence. That is fragile.\n\n2. The strongest hard evidence in the packet points the other way on current control\n- E6 says the current House membership is 218 Republicans, 214 Democrats, 1 Independent, and 2 vacancies. Under the resolution, independents count with the party they caucus with, so the actual starting point is not obviously a Democratic chamber.\n- E5 gives a different current split, 220 Democrats and 215 Republicans for the 119th Congress, which conflicts with E6. That inconsistency should reduce confidence in any precise lean built from “current seats.”\n- If the team is inferring a Democratic edge from current composition, the evidence base is muddled. And if the chamber is in fact currently functionally Republican-controlled per E6, then a 67-30 split may overstate the Democratic position.\n\n3. Base-rate and incumbency logic argue against such a lopsided Democratic favorite\n- Midterm House outcomes are noisy and often hinge on a small number of swing districts, not broad national margins. With all 435 seats up (E12), the plurality can flip on a handful of contests.\n- E11 says 59 representatives were not seeking reelection, the highest since at least 2000. That is a major volatility signal. Open seats are less incumbency-protected and increase upset potential. High turnover should widen uncertainty, not compress it into 67/30.\n- A high-open-seat environment especially undermines confidence in a forecast derived from generic expert-consensus snapshots rather than seat-level fundamentals.\n\n4. Candidate filing asymmetries cut against a strong Democratic probability\n- E13 says as of 2026-03-10, 35 races had no Republican candidate but only 3 had no Democratic candidate. Superficially that helps Democrats because they contest more seats, but as evidence for final House plurality it is ambiguous and may be misused.\n- The 35 uncontested-by-GOP seats are likely concentrated in heavily Democratic districts; contesting them or not often has little effect on control. Meanwhile the 3 seats without Democrats are identified in E14 as NJ-11, RI-1, and WY-AL; one of those is Wyoming, a guaranteed GOP seat, but the broader point is that filing asymmetries are a poor proxy for control.\n- If the team used this as directional support for Democrats, that may be overinterpretation. Candidate presence in safe seats is not the same as winning the median competitive district.\n\n5. The resolution criterion creates additional paths to non-Democratic outcomes that may be underappreciated\n- Resolution is on who holds the most seats after the final result, including specials/recounts/runoffs, in the 120th Congress. It is not exactly “who wins election night control.”\n- E6 already shows vacancies and an Independent. Because caucusing determines party count, post-election alignment choices or delayed special-election outcomes can matter at the margin.\n- “Other” is still rightly small, but the existence of vacancies and caucus-sensitive classification means the distribution should probably carry a little more tail risk than 3% if the chamber is close. That tail risk likely comes partly out of Democrats.\n\n6. There is a risk of anchoring to consensus while ignoring time remaining and lack of official results\n- E7, E15, E16, E17, and E18 collectively indicate there is no official certified 2026 House party seat-count result in the evidence. So this is not an “already resolved” situation where a huge edge is justified by near-final tallies.\n- Yet the team forecast may be acting as though the matter is mostly settled because Metaculus is overwhelmingly Democratic (E1/E2/E4). Without certified outcomes or district-level empirical support, that confidence may be premature.\n- E9 and E10 mention AP coverage framing the race as Republicans trying to keep their majority. Even though snippets are weak evidence, that framing is at least consistent with a genuinely competitive environment rather than an 87-12 blowout.\n\n7. Magnitude critique: even if Democrats are favorites, 67% may still be too high\n- The key problem is not necessarily direction but spread. Going from the Metaculus community’s 87-88% Democratic probability (E1/E2/E4) down to 67% may look conservative, but if the only strong pro-D evidence is duplicated consensus, then there may be little basis for any decisive Democratic edge larger than modest favorite status.\n- Given current chamber ambiguity (E5 vs E6), high open-seat volatility (E11), universal seat exposure (E12), and absence of official results (E7, E15-E18), a distribution more like Democrats low-to-mid 50s, Republicans low-to-mid 40s, Other low single digits is easier to defend than 67/30/3.\n\nBottom line: the team seems to have over-weighted duplicated low-grade consensus evidence (E1-E4) and under-weighted volatility/base-rate signals (E6, E11, E12), so the forecast should move toward Republicans by about 10-15 points, roughly to Democrats 52-57%, Republicans 40-45%, Other 2-4%."
+ },
+ "final": {
+  "kind": "multiple_choice",
+  "probability": null,
+  "options": {
+   "Democrats": 0.6017,
+   "Republicans": 0.3495,
+   "Other": 0.04880000000000002
+  },
+  "percentiles": null
+ },
+ "comment": "**Resolution forensics.** This question resolves to the party that 'holds more House of Representatives seats than any other party in the 120th Congress,' the House elected on November 3, 2026 and taking office January 3, 2027. It resolves 'Democrats' if Democrats hold more seats than Republicans and any other grouping after the 'final result of the elections, including special elections, recounts, or run-offs.' It resolves 'Republicans' if Republicans hold more seats than Democrats and any other grouping on that same basis. Independent representatives are 'counted as part of the party they caucus with.' It resolves 'Other' if 'Republicans and Democrats hold an equal number of seats,' if 'a third party holds more seats than both Republicans and Democrats,' if 'Independents that do not caucus with either party hold more seats than both Republicans and Democrats,' or if 'more seats are vacant than the ones held by both Republicans and Democrats.'\n\nStatus quo: Republicans. Traps: Resolution is based on the 120th Congress seat count, not current House composition or election-night projections.; The operative result is the 'final result of the elections, including special elections, recounts, or run-offs,' so preliminary calls do not settle it.; Independents who caucus with a major party are counted with that party, not as 'Other.'.\n\n**Blind base rate.** US House elections since World War II, with emphasis on midterm elections in which one major party enters with a narrow majority. This is a class of roughly 40 postwar House elections, about 20 of them midterms, with a smaller subset of close-control cases.. Estimate Democrats: 0.57; Republicans: 0.41; Other: 0.02.\n\n**Key evidence.** [A1] The House Historian's Party Divisions table lists the 119th Congress as 215 Republicans and 220 Democrats, with 0 other and 5 delegates/resident commissioner. (S2 https://history.house.gov/Institution/Party-Divisions/Party-Divisions/) | [A1] The House Radio-Television Gallery party breakdown page shows the current House membership as 218 Republicans, 214 Democrats, 1 Independent, and 2 vacancies; Whole Number of the House is 433. (S2 https://radiotv.house.gov/house-data/party-breakdown) | [A1] The Clerk's election-information page confirms the Office of the Clerk publishes official election statistics and links to the Statistics of the 2024 Presidential and Congressional Election for the 119th Congress, not the 120th. (S2 https://clerk.house.gov/Members/ViewElectionInformation)\n\n**ACH ensemble** (gpt54_a, gpt54_b, sonnet46, grok46): Democrats: 0.67; Republicans: 0.30; Other: 0.03 via option_median.\n\n**Devil's advocate** moved it to Democrats: 0.60; Republicans: 0.35; Other: 0.05.\n\n**Final:** Democrats: 0.60; Republicans: 0.35; Other: 0.05\n\n_bot=XtremeSavageForecast stages=forensics,blind_base_rate,evidence_table,ach_forecast,devils_advocate cost=$0.32_",
+ "stage_costs": [
+  {
+   "stage": "forensics",
+   "model": "openai/gpt-5.4",
+   "cost_usd": 0.022175,
+   "seconds": 13.139999999955762
+  },
+  {
+   "stage": "blind_base_rate",
+   "model": "openai/gpt-5.4",
+   "cost_usd": 0.01001,
+   "seconds": 7.329000000027008
+  },
+  {
+   "stage": "research",
+   "model": "openai/gpt-5.4-mini:online",
+   "cost_usd": 0.1682547,
+   "seconds": 19.95299999997951
+  },
+  {
+   "stage": "evidence_table",
+   "model": "openai/gpt-5.4-mini",
+   "cost_usd": 0.01069425,
+   "seconds": 10.078000000037719
+  },
+  {
+   "stage": "forecast_members",
+   "model": "ensemble",
+   "cost_usd": 0.081622,
+   "seconds": 60.125
+  },
+  {
+   "stage": "devils_advocate",
+   "model": "openai/gpt-5.4",
+   "cost_usd": 0.027437500000000004,
+   "seconds": 26.905999999959022
+  }
+ ],
+ "cost_usd": 0.32019345,
+ "guards_fired": [],
+ "published": true,
+ "error": null
+}

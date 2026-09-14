@@ -41,7 +41,7 @@ class FakePublisher:
     def __init__(self, open_=True):
         self.open_ = open_; self.published = []
 
-    def is_open(self, post_id):
+    def is_open(self, post_id, question_id=None):
         return self.open_
 
     def publish(self, q, value, comment):
@@ -382,7 +382,7 @@ class RecordingClient:
         self.q = SimpleNamespace(state=state, close_time=close_time)
         self.comment_raises = comment_raises
 
-    def get_question_by_post_id(self, post_id):
+    def get_question_by_post_id(self, post_id, group_question_mode="exclude"):
         self.calls.append(("get", post_id))
         return self.q
 
@@ -449,3 +449,31 @@ def test_publisher_is_open_reads_state_and_close_time():
     assert not pipeline.MetaculusPublisher(RecordingClient(QuestionState.CLOSED, future)).is_open(5)
     assert not pipeline.MetaculusPublisher(RecordingClient(QuestionState.OPEN, past)).is_open(5)
     assert pipeline.MetaculusPublisher(RecordingClient(QuestionState.OPEN, None)).is_open(5)
+
+
+class GroupRecordingClient(RecordingClient):
+    """Mimics forecasting-tools on a question-group post: the default lookup raises,
+    unpack mode returns one MetaculusQuestion per subquestion."""
+    def __init__(self, subs):
+        super().__init__()
+        self.subs = subs
+
+    def get_question_by_post_id(self, post_id, group_question_mode="exclude"):
+        self.calls.append(("get", post_id, group_question_mode))
+        if group_question_mode == "exclude":
+            raise ValueError("Expected 1 question but got 0. You probably accessed a group question.")
+        return list(self.subs)
+
+
+def test_publisher_is_open_handles_group_subquestions():
+    # Live failure 2026-09-13 on post 43322 (a question-group subquestion): the publish gate
+    # re-fetched by post id, the library excluded the group, raised, and the question was
+    # recorded PIPELINE_ERROR after $0.45 of work. is_open must resolve the subquestion.
+    future = datetime.now(timezone.utc) + timedelta(days=1)
+    past = datetime.now(timezone.utc) - timedelta(days=1)
+    subs = [SimpleNamespace(id_of_question=6, state=QuestionState.OPEN, close_time=future),
+            SimpleNamespace(id_of_question=7, state=QuestionState.CLOSED, close_time=past)]
+    pub = pipeline.MetaculusPublisher(GroupRecordingClient(subs))
+    assert pub.is_open(5, question_id=6)
+    assert not pub.is_open(5, question_id=7)
+    assert not pub.is_open(5, question_id=99)  # subquestion vanished: do not publish

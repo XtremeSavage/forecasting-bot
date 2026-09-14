@@ -6,6 +6,9 @@ on:
       mode:
         description: "tournament | cup | test | dry"
         default: "dry"
+      limit:
+        description: "max questions this run"
+        default: "1"
 
 permissions:
   contents: write
@@ -34,7 +37,7 @@ jobs:
         continue-on-error: true
         run: |
           set +e
-          poetry run python run.py --mode ${{ github.event.inputs.mode }} --limit 3 --config ${{ vars.BOT_CONFIG || 'config.yaml' }}
+          poetry run python run.py --mode ${{ github.event.inputs.mode }} --limit ${{ github.event.inputs.limit || '1' }} --config ${{ vars.BOT_CONFIG || 'config.yaml' }}
           echo "exit=$?" >> "$GITHUB_OUTPUT"
         env:
           METACULUS_TOKEN: ${{ secrets.METACULUS_TOKEN }}

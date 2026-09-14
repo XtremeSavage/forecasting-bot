@@ -97,3 +97,20 @@ def test_build_missing_runs_dir_and_no_scores(tmp_path):
     assert "generated" in result
     assert out.exists()
     assert json.loads(out.read_text(encoding="utf-8")) == result
+
+
+def test_numeric_label_is_the_true_median_not_p40():
+    from docs.dashboard.build_index import _format_forecast
+    # Live percentile set has no p50; 40 and 60 straddle it. Was labelled p50=<p40>.
+    assert _format_forecast({"kind": "numeric", "percentiles": {"40": 3.47, "60": 3.61}}) == "p50=3.54"
+    assert _format_forecast({"kind": "numeric", "percentiles": {"50": 2.0}}) == "p50=2.00"
+
+
+def test_load_records_keeps_each_group_subquestion(tmp_path):
+    from docs.dashboard.build_index import _load_records
+    import json
+    for qid in (1, 2):
+        (tmp_path / f"7_{qid}_x.json").write_text(json.dumps(
+            {"question": {"post_id": 7, "question_id": qid, "kind": "binary", "url": "u", "title": "t"}, "published": True,
+             "run_ts": "2026-09-14T00:00:00+00:00", "final": {"probability": 0.5}, "cost_usd": 0.1}), encoding="utf-8")
+    assert len(_load_records(tmp_path)) == 2

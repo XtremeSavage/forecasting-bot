@@ -5,7 +5,8 @@ import logging
 import sys
 from datetime import datetime, timezone
 import dotenv
-from forecasting_tools import MetaculusClient, MetaculusQuestion
+from forecasting_tools import (BinaryQuestion, DiscreteQuestion, MetaculusClient, MetaculusQuestion,
+                               MultipleChoiceQuestion, NumericQuestion)
 from bot import records
 from bot.config import load_settings
 from bot.guards import season_spent
@@ -25,9 +26,32 @@ def parse_args(argv=None):
     return p.parse_args(argv)
 
 
+SUPPORTED_TYPES = (BinaryQuestion, MultipleChoiceQuestion, NumericQuestion, DiscreteQuestion)
+
+
+def effective_limit(cli_limit: int | None, default: int) -> int:
+    # `--limit 0` must mean zero, not "unset": the workflow forwards the dispatch input
+    # verbatim, and 0 falling through to the default would publish 15 live questions.
+    return default if cli_limit is None else cli_limit
+
+
 def select_questions(questions: list[MetaculusQuestion], max_n: int, runs_dir: str) -> list[MetaculusQuestion]:
     far = datetime.max.replace(tzinfo=timezone.utc)
-    keep = [q for q in questions if not q.already_forecasted and not records.already_forecasted_locally(q.id_of_post, runs_dir)]
+    keep: list[MetaculusQuestion] = []
+    seen: set[int | None] = set()
+    for q in questions:
+        # Conditional and date questions would crash question_summary before any record
+        # exists (and be re-selected every run); drop them here with a log line instead.
+        if not isinstance(q, SUPPORTED_TYPES):
+            log.info("skipping unsupported %s post %s", type(q).__name__, getattr(q, "id_of_post", "?"))
+            continue
+        # The same question can appear in two targets (Fall and MiniBench share posts).
+        if q.id_of_question in seen:
+            continue
+        seen.add(q.id_of_question)
+        if q.already_forecasted or records.already_forecasted_locally(q.id_of_post, q.id_of_question, runs_dir):
+            continue
+        keep.append(q)
     keep.sort(key=lambda q: q.close_time or far)
     return keep[:max_n]
 
@@ -45,7 +69,7 @@ async def _run(args) -> int:
     questions: list[MetaculusQuestion] = []
     for t in targets:
         questions += client.get_all_open_questions_from_tournament(t)
-    questions = select_questions(questions, args.limit or s.limits.max_questions_per_run, args.runs_dir)
+    questions = select_questions(questions, effective_limit(args.limit, s.limits.max_questions_per_run), args.runs_dir)
     log.info("forecasting %d questions (mode=%s)", len(questions), args.mode)
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     sem = asyncio.Semaphore(s.limits.max_concurrent_questions)

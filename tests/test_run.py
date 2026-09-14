@@ -54,3 +54,34 @@ async def test_run_times_out_a_wedged_question(tmp_path, monkeypatch):
     args = run.parse_args(["--mode", "dry", "--runs-dir", str(tmp_path)])
     code = await asyncio.wait_for(run._run(args), timeout=10)
     assert code == 1  # the timeout counts as a guard
+
+
+def _qq(pid, qid, hours=1, done=False):
+    return BinaryQuestion(question_text="t", id_of_post=pid, id_of_question=qid, close_time=datetime.now(timezone.utc) + timedelta(hours=hours), already_forecasted=done)
+
+
+def test_select_keeps_unpublished_group_sibling(tmp_path):
+    from tests.test_comment_records import _rec_for
+    from bot import records
+    records.write(_rec_for(43322, 43323, True), runs_dir=str(tmp_path))
+    out = run.select_questions([_qq(43322, 43323), _qq(43322, 43324)], max_n=5, runs_dir=str(tmp_path))
+    assert [q.id_of_question for q in out] == [43324]
+
+
+def test_select_dedupes_same_question_from_two_tournaments(tmp_path):
+    out = run.select_questions([_qq(1, 11), _qq(1, 11)], max_n=5, runs_dir=str(tmp_path))
+    assert [q.id_of_question for q in out] == [11]
+
+
+def test_select_drops_unsupported_types_before_forecasting(tmp_path):
+    from forecasting_tools import ConditionalQuestion, DateQuestion
+    from forecasting_tools.data_models.questions import MetaculusQuestion
+    cond = ConditionalQuestion.model_construct(question_text="c", id_of_post=9, id_of_question=99, close_time=None, already_forecasted=False)
+    out = run.select_questions([_qq(1, 11), cond], max_n=5, runs_dir=str(tmp_path))
+    assert [q.id_of_question for q in out] == [11]
+
+
+def test_limit_zero_means_zero(tmp_path):
+    assert run.effective_limit(0, 15) == 0
+    assert run.effective_limit(None, 15) == 15
+    assert run.effective_limit(2, 15) == 2

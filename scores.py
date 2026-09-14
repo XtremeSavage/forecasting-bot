@@ -10,7 +10,7 @@ from forecasting_tools import MetaculusClient
 
 
 def load_records(runs_dir: str) -> list[dict]:
-    latest: dict[int, dict] = {}
+    latest: dict[tuple, dict] = {}
     for p in sorted(Path(runs_dir).glob("**/*.json")):
         try:
             r = json.loads(p.read_text(encoding="utf-8"))
@@ -18,9 +18,10 @@ def load_records(runs_dir: str) -> list[dict]:
             continue
         if not r.get("published"):
             continue
-        pid = r["question"]["post_id"]
-        if pid not in latest or r["run_ts"] > latest[pid]["run_ts"]:
-            latest[pid] = r
+        # One row per subquestion: a question-group post holds several.
+        key = (r["question"]["post_id"], r["question"].get("question_id"))
+        if key not in latest or r["run_ts"] > latest[key]["run_ts"]:
+            latest[key] = r
     return list(latest.values())
 
 
@@ -42,7 +43,7 @@ def join(records: list[dict], fetch: Callable[[int], dict]) -> list[dict]:
     for r in records:
         if r["question"]["kind"] != "binary":
             continue  # v1 scores binaries only; numeric/MC come from the Metaculus leaderboard
-        info = fetch(r["question"]["post_id"])
+        info = fetch(r["question"]["post_id"], r["question"].get("question_id"))
         if not info.get("resolved") or info.get("resolution") not in ("yes", "no"):
             continue
         yes = info["resolution"] == "yes"
@@ -86,9 +87,15 @@ def cp_from_question_json(qj: dict) -> float | None:
     return None
 
 
-def metaculus_fetch(client: MetaculusClient) -> Callable[[int], dict]:
-    def f(post_id: int) -> dict:
-        q = client.get_question_by_post_id(post_id)
+def metaculus_fetch(client: MetaculusClient) -> Callable[..., dict]:
+    def f(post_id: int, question_id: int | None = None) -> dict:
+        # Unpack question groups and pick our subquestion; the default mode raises on groups.
+        q = client.get_question_by_post_id(post_id, group_question_mode="unpack_subquestions")
+        if isinstance(q, list):
+            matches = [x for x in q if question_id is None or getattr(x, "id_of_question", None) == question_id]
+            if not matches:
+                return {"resolved": False, "resolution": None, "cp_at_reveal": None}
+            q = matches[0]
         res = (q.resolution_string or "").lower() or None
         cp = cp_from_question_json((q.api_json or {}).get("question") or {})
         return {"resolved": res in ("yes", "no"), "resolution": res, "cp_at_reveal": cp}

@@ -29,10 +29,19 @@ def _format_forecast(fv: dict | None) -> str | None:
     if percentiles:
         p50 = percentiles.get("50", percentiles.get(50))
         if p50 is None:
-            # No exact p50 present (shouldn't normally happen) - fall back to
-            # whichever percentile is closest to the median.
-            key = min(percentiles, key=lambda k: abs(float(k) - 50))
-            p50 = percentiles[key]
+            # config.yaml's percentile set is [5,10,20,40,60,80,90,95], so there is never
+            # an exact p50: interpolate it between the nearest percentiles either side.
+            try:
+                pts = sorted((float(k), float(v)) for k, v in percentiles.items())
+                lo = max((kv for kv in pts if kv[0] <= 50), default=None)
+                hi = min((kv for kv in pts if kv[0] >= 50), default=None)
+                if lo and hi:
+                    p50 = lo[1] if hi[0] == lo[0] else lo[1] + (hi[1] - lo[1]) * (50 - lo[0]) / (hi[0] - lo[0])
+                else:
+                    p50 = (lo or hi)[1]
+            except (TypeError, ValueError):
+                key = min(percentiles, key=lambda k: abs(float(k) - 50))
+                p50 = percentiles[key]
         try:
             return f"p50={float(p50):.2f}"
         except (TypeError, ValueError):
@@ -41,20 +50,20 @@ def _format_forecast(fv: dict | None) -> str | None:
 
 
 def _load_records(runs_path: Path) -> list[dict]:
-    """Load every run record, keeping only the latest one per post_id."""
-    latest: dict[int, dict] = {}
+    """Load every run record, keeping only the latest one per subquestion."""
+    latest: dict[tuple, dict] = {}
     for p in sorted(runs_path.glob("**/*.json")):
         try:
             r = json.loads(p.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, OSError, UnicodeDecodeError):
             continue
         try:
-            post_id = r["question"]["post_id"]
+            key = (r["question"]["post_id"], r["question"].get("question_id"))
             run_ts = r["run_ts"]
         except (KeyError, TypeError):
             continue
-        if post_id not in latest or run_ts > latest[post_id]["run_ts"]:
-            latest[post_id] = r
+        if key not in latest or run_ts > latest[key]["run_ts"]:
+            latest[key] = r
     return list(latest.values())
 
 
@@ -64,6 +73,7 @@ def _slim(r: dict) -> dict:
     agg = r.get("aggregate") or {}
     return {
         "post_id": q.get("post_id"),
+        "question_id": q.get("question_id"),
         "url": q.get("url"),
         "title": q.get("title"),
         "kind": q.get("kind"),

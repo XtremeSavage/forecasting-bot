@@ -45,14 +45,14 @@ def test_write_and_local_check(tmp_path):
     p = records.write(rec, runs_dir=str(tmp_path))
     assert Path(p).exists() and "2026-09-12" in p and "42_" in p
     assert json.loads(Path(p).read_text())["final"]["probability"] == 0.24
-    assert records.already_forecasted_locally(42, str(tmp_path))
-    assert not records.already_forecasted_locally(7, str(tmp_path))
+    assert records.already_forecasted_locally(42, None, str(tmp_path))
+    assert not records.already_forecasted_locally(7, None, str(tmp_path))
 
     rec2 = _rec()
     rec2.question.post_id = 43
     rec2.published = False
     records.write(rec2, runs_dir=str(tmp_path))
-    assert not records.already_forecasted_locally(43, str(tmp_path))
+    assert not records.already_forecasted_locally(43, None, str(tmp_path))
 
 
 def test_question_summary_binary_and_numeric():
@@ -79,3 +79,35 @@ def test_comment_fits_a_very_small_budget():
     assert len(comment.build(_rec(), 200)) <= 200
     assert len(comment.build(_rec(), 40)) <= 40
     assert len(comment.build(_rec(), 10)) <= 10
+
+
+def _rec_for(post_id, question_id, published, ts="2026-09-14T00:51:13+00:00"):
+    r = _rec()
+    r.question.post_id, r.question.question_id, r.published, r.run_ts = post_id, question_id, published, ts
+    return r
+
+
+def test_identity_is_per_subquestion_not_per_post(tmp_path):
+    # Live 2026-09-14: post 43322 is a question group with subquestions 43323 (published) and
+    # 43324 (never run). Keying on post_id alone made 43324 look already forecast forever.
+    records.write(_rec_for(43322, 43323, True), runs_dir=str(tmp_path))
+    assert records.already_forecasted_locally(43322, 43323, str(tmp_path))
+    assert not records.already_forecasted_locally(43322, 43324, str(tmp_path))
+
+
+def test_sibling_records_in_same_second_do_not_overwrite(tmp_path):
+    a = records.write(_rec_for(5, 51, True), runs_dir=str(tmp_path))
+    b = records.write(_rec_for(5, 52, False), runs_dir=str(tmp_path))
+    assert a != b
+    assert records.already_forecasted_locally(5, 51, str(tmp_path))
+    assert not records.already_forecasted_locally(5, 52, str(tmp_path))
+
+
+def test_legacy_filename_records_still_recognised(tmp_path):
+    # Records written before 2026-09-14 are named {post_id}_{HHMMSS}.json; identity must
+    # come from the JSON body, not the filename.
+    import json
+    d = tmp_path / "2026-09-13"; d.mkdir()
+    (d / "43322_215415.json").write_text(_rec_for(43322, 43323, True).model_dump_json(), encoding="utf-8")
+    assert records.already_forecasted_locally(43322, 43323, str(tmp_path))
+    assert not records.already_forecasted_locally(43322, 43324, str(tmp_path))

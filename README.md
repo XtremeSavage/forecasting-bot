@@ -120,7 +120,7 @@ Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULU
 - [x] Live on bot-testing-area 2026-09-13: main bot 3 questions, control bot 10. See `docs/HANDOFF.md` step 6.
 - [ ] Join the Metaculus Discord (https://discord.gg/7GEKtpnVdJ), channel `build-a-forecasting-bot`.
 - [ ] Submit the Metaculus Data Needs Form (Bot Benchmarking access tier) so the scorer can see community predictions: https://docs.google.com/forms/d/e/1FAIpQLSeJhtZzHl5qMvBjbXbatyaqoS4IU7RE0GGw_vlhs6I9syqn1g/viewform
-- [ ] Enable GitHub Pages (source: GitHub Actions) for the dashboard.
+- [x] GitHub Pages enabled 2026-09-13. Dashboard: https://xtremesavage.github.io/forecasting-bot/
 - [ ] Remember the required end-of-season bot survey. No survey, no prize.
 
 ## Next step

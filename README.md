@@ -118,8 +118,8 @@ Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULU
 - [x] GitHub secrets in place (2026-09-13). Decision: **no `ANTHROPIC_API_KEY`**; XtremeSavageXD chose to rely on OpenRouter alone. An OpenRouter outage fails the question with `PROVIDER_FALLBACK` and it is retried next run.
 - [x] First paid dry run done 2026-09-13: $0.38, clean. See `docs/HANDOFF.md` step 4.
 - [x] Live on bot-testing-area 2026-09-13: main bot 3 questions, control bot 10. See `docs/HANDOFF.md` step 6.
-- [ ] Join the Metaculus Discord (https://discord.gg/7GEKtpnVdJ), channel `build-a-forecasting-bot`.
-- [ ] Submit the Metaculus Data Needs Form (Bot Benchmarking access tier) so the scorer can see community predictions: https://docs.google.com/forms/d/e/1FAIpQLSeJhtZzHl5qMvBjbXbatyaqoS4IU7RE0GGw_vlhs6I9syqn1g/viewform
+- [x] Joined the Metaculus Discord, channel `build-a-forecasting-bot` (2026-09-13). XtremeSavageXD watches it; Claude has no access.
+- [x] Data Needs Form (Bot Benchmarking access tier) submitted 2026-09-13. When granted, `cp_at_reveal` in `scores.py` starts filling in on its own.
 - [x] GitHub Pages enabled 2026-09-13. Dashboard: https://xtremesavage.github.io/forecasting-bot/
 - [ ] Remember the required end-of-season bot survey. No survey, no prize.
 

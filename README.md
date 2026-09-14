@@ -114,11 +114,11 @@ Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULU
 - [x] **Participation form** and LLM credit request (same form, https://forms.gle/aQdYMq9Pisrf1v7d8). Submitted by 2026-09-13.
 - [x] OpenRouter account, key, and $25 prepaid (2026-09-13). Metaculus credit request pending.
 - [x] AskNews API key in place (2026-09-13).
-- [ ] **Second bot account** `XtremeSavageForecast-v2` for the control, plus its token.
-- [ ] Add the six secrets to the GitHub repo (names in "How to run").
+- [x] Second bot account `XtremeSavageForecast-v2` and its token in GitHub secrets (2026-09-13).
+- [x] GitHub secrets in place (2026-09-13). Decision: **no `ANTHROPIC_API_KEY`**; XtremeSavageXD chose to rely on OpenRouter alone. An OpenRouter outage fails the question with `PROVIDER_FALLBACK` and it is retried next run.
 - [x] First paid dry run done 2026-09-13: $0.38, clean. See `docs/HANDOFF.md` step 4.
-- [ ] Join the Metaculus Discord, channel `build-a-forecasting-bot`.
-- [ ] Submit the Metaculus Data Needs Form (Bot Benchmarking access tier) so the scorer can see community predictions. Link is in the "What data do I have access to" section of the resources page.
+- [ ] Join the Metaculus Discord (https://discord.gg/7GEKtpnVdJ), channel `build-a-forecasting-bot`.
+- [ ] Submit the Metaculus Data Needs Form (Bot Benchmarking access tier) so the scorer can see community predictions: https://docs.google.com/forms/d/e/1FAIpQLSeJhtZzHl5qMvBjbXbatyaqoS4IU7RE0GGw_vlhs6I9syqn1g/viewform
 - [ ] Enable GitHub Pages (source: GitHub Actions) for the dashboard.
 - [ ] Remember the required end-of-season bot survey. No survey, no prize.
 

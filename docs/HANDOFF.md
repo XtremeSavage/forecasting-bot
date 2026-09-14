@@ -100,7 +100,7 @@ A senior review of the whole branch found one Critical and ten Important issues;
 Residuals parked for XtremeSavageXD, none blocking:
 
 - ~~`control_cup.yaml` has no manual trigger~~ Fixed 2026-09-13: `workflow_dispatch:` added.
-- The control workflows do not pass `ANTHROPIC_API_KEY`; the stock template has no fallback route. XtremeSavageXD's call whether the control should get one.
+- Anthropic fallback: XtremeSavageXD decided 2026-09-13 not to buy an Anthropic API key; `ANTHROPIC_API_KEY` is blank everywhere. The fallback path in `bot/llm.py` still runs and fails fast; a question hit by an OpenRouter outage records `PROVIDER_FALLBACK` and is retried next run. The control bot never had a fallback.
 - During an OpenRouter outage all four ensemble members become the same Anthropic model; `PROVIDER_FALLBACK` records it.
 - A timed-out question's record shows `published=False` with no guard string (the guard is only logged); the question is retried next run.
 - Web search can fan out to 15 concurrent calls (5 queries times 3 questions); watch spend on the first real run.

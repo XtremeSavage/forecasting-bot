@@ -6,6 +6,14 @@ on:
     paths:
       - "runs/**"
       - "docs/dashboard/**"
+  # A push made by a workflow with GITHUB_TOKEN never triggers other workflows, so the
+  # bot runs' record commits do not fire the push trigger above (seen 2026-09-14).
+  # Rebuild after every bot workflow completes instead, with a daily backstop.
+  workflow_run:
+    workflows: ["Main bot on tournament", "Main bot on Metaculus Cup", "Test bot"]
+    types: [completed]
+  schedule:
+    - cron: "15 6 * * *"
   workflow_dispatch:
 
 permissions:

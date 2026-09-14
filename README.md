@@ -25,7 +25,7 @@ Build an AI forecasting bot and enter it in the Metaculus FutureEval bot tournam
 
 Plan (status 2026-09-12: code complete and reviewed, nothing run live yet; see `docs/HANDOFF.md`):
 
-- **Now to Sep 20: accounts, secrets, first paid dry run, then live on the testing area.** Both bots must post to bot-testing-area (`32977`) before Sep 21.
+- ~~Now to Sep 20: accounts, secrets, first paid dry run, then live on the testing area.~~ Done 2026-09-13: both bots have posted to bot-testing-area.
 - **Sep 21 to Sep 27: warmup MiniBench.** Both bots live. Fix what the first real records reveal. Enable the dashboard.
 - **Sep 28 onward: Fall tournament.** Analyze MiniBench results every two weeks, change one thing at a time, keep the control bot untouched.
 
@@ -117,6 +117,7 @@ Secrets (Settings, Secrets and variables, Actions): `METACULUS_TOKEN`, `METACULU
 - [x] Second bot account `XtremeSavageForecast-v2` and its token in GitHub secrets (2026-09-13).
 - [x] GitHub secrets in place (2026-09-13). Decision: **no `ANTHROPIC_API_KEY`**; XtremeSavageXD chose to rely on OpenRouter alone. An OpenRouter outage fails the question with `PROVIDER_FALLBACK` and it is retried next run.
 - [x] First paid dry run done 2026-09-13: $0.38, clean. See `docs/HANDOFF.md` step 4.
+- [x] Live on bot-testing-area 2026-09-13: main bot 3 questions, control bot 10. See `docs/HANDOFF.md` step 6.
 - [ ] Join the Metaculus Discord (https://discord.gg/7GEKtpnVdJ), channel `build-a-forecasting-bot`.
 - [ ] Submit the Metaculus Data Needs Form (Bot Benchmarking access tier) so the scorer can see community predictions: https://docs.google.com/forms/d/e/1FAIpQLSeJhtZzHl5qMvBjbXbatyaqoS4IU7RE0GGw_vlhs6I9syqn1g/viewform
 - [ ] Enable GitHub Pages (source: GitHub Actions) for the dashboard.

@@ -49,7 +49,7 @@ The bot is built, reviewed, and tested offline, and has never made a paid or liv
 
 **Cost profiles (added 2026-09-13).** `config.lean.yaml` is a second profile at roughly a third of the cost: forecast_tier moved to gpt-5.4-mini (forensics, base rate, devil's advocate), two members (gpt-5.4, sonnet-4.6), two web-search queries, $0.40/question and $150/season caps. Workflows pick the profile from the repo variable `BOT_CONFIG` (default `config.yaml`). XtremeSavageXD is funding OpenRouter personally ($25 to start) while the Metaculus credit request is pending; if credits do not arrive, switch to lean before Sep 28.
 
-Model roster in `config.yaml` as of 2026-09-12 (all verified to exist on OpenRouter): forecast tier `openai/gpt-5.4`; members `openai/gpt-5.4` at two temperatures, `anthropic/claude-sonnet-4.6`, `x-ai/grok-4.6`; cheap tier `openai/gpt-5.4-mini`; web search `openai/gpt-5.4-mini:online`. Rough cost estimate is $0.35 to $0.45 per question against a $1 cap.
+Model roster in `config.yaml` as of 2026-09-12 (all verified to exist on OpenRouter): forecast tier `openai/gpt-5.4`; members `openai/gpt-5.4` at two temperatures, `anthropic/claude-sonnet-4.6`, `x-ai/grok-4.6`; cheap tier `openai/gpt-5.4-mini`; web search `openai/gpt-5.4-mini:online`. Rough cost estimate is $0.35 to $0.45 per question. `limits.per_question_usd` ($1) is a soft cap: past 70% of it the roster is trimmed and the devil's advocate skipped, and `BUDGET_EXHAUSTED` is recorded, but a question that has already launched its member calls is not cut off mid-flight. The hard stops are the per-call ceiling and the season cap (checked on disk at startup and again before each question during a run).
 
 ## Decisions made without XtremeSavageXD (rulings)
 
@@ -80,6 +80,25 @@ Every ruling is also in the build ledger. The ones that matter:
 - Spec: `docs/superpowers/specs/2026-09-11-forecasting-bot-design.md`
 - Plan: `docs/superpowers/plans/2026-09-11-forecasting-bot.md`
 - Build ledger with every ruling, review verdict, and deferred minor: `docs/superpowers/ledger-2026-09-12.md`.
+
+## Post-launch code review (2026-09-13, local `/code-review high` over bot/, run.py, scores.py, dashboard)
+
+Ten confirmed findings, all fixed the same night in two commits (117 tests, up from 97):
+
+- Identity keyed on `post_id` broke question groups: siblings were filtered out after the first published, and the scorer/dashboard collapsed them to one row. Now `question_id` in filenames, identity from the JSON body, scorer fetch unpacks groups.
+- Conditional questions crashed before a record existed and were re-selected every run; date questions wrote a no-op record every run. Both are now dropped at selection with a log line.
+- The same question in two tournaments was forecast (and paid for) twice. Deduped.
+- `--limit 0` meant 15. Fixed.
+- A timed-out question's record showed no guard. `QUESTION_TIMEOUT` is now recorded, and the soft budget sits at 80% of the hard wall clock so `BUDGET_EXHAUSTED` can actually fire on time.
+- The Anthropic fallback fired on any error, including 402/404. Now only on 429/5xx/connection errors; 4xx raise immediately.
+- The season cap was checked once from disk; it is now also checked before each question during a run (exit 2 when hit mid-run).
+- Open-bounded numeric questions: ensemble mass below/above the bound was clipped to the bound edge, which the publish rebuild turned into a PMF spike. Tails are now extended in the library's location space.
+- Dashboard labelled p40 as p50; it interpolates the median now.
+- README/HANDOFF overstated the $1 per-question figure as a hard cap; wording fixed.
+
+Not changed (minor, from the review's cut list): the sync Metaculus client blocks the event loop for ~10 s per publish; `is_open` on a plain post does not compare question ids; a redundant trial CDF build; hardcoded price tables in `llm.py`; one unclosed OpenAI client per question. Revisit after MiniBench round one.
+
+A security review the same night (whole project) found no exploitable issues. Hardening left undone by XtremeSavageXD's choice: SHA-pinning actions, `persist-credentials: false`, quoting dispatch inputs, truncating exception text in records.
 
 ## Final whole-branch review and fix wave
 

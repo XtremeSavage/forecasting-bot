@@ -118,3 +118,44 @@ async def test_postcall_cost_ceiling_raises():
     with pytest.raises(CostCeilingError):
         await llm.complete("hi", model="openai/gpt-5.4", max_tokens=10)
     assert len(t.calls) == 1
+
+
+
+def _status_error(status):
+    import httpx, openai
+    resp = httpx.Response(status, request=httpx.Request("POST", "https://openrouter.ai/x"))
+    cls = {402: openai.APIStatusError, 404: openai.NotFoundError, 500: openai.InternalServerError, 429: openai.RateLimitError}[status]
+    return cls("err", response=resp, body=None)
+
+
+class StatusTransport(FakeTransport):
+    def __init__(self, status):
+        super().__init__(replies=["from claude"])
+        self.status = status
+
+    async def openrouter(self, model, messages, temperature, max_tokens):
+        self.calls.append(("openrouter", model))
+        raise _status_error(self.status)
+
+
+@pytest.mark.parametrize("status", [402, 404])
+async def test_client_errors_do_not_trigger_fallback(status):
+    # A 402 (no credits) or 404 (typo model slug) is not an outage; routing it to the
+    # Anthropic fallback hides the real problem and, with a key present, silently turns
+    # every ensemble member into the fallback model.
+    s = load_settings("config.yaml")
+    t = StatusTransport(status)
+    llm = Llm(s, transport=t)
+    with pytest.raises(LlmError):
+        await llm.complete("hi", model="openai/gpt-5.4")
+    assert t.calls == [("openrouter", "openai/gpt-5.4")]
+    assert llm.fallback_used is False
+
+
+@pytest.mark.parametrize("status", [500, 429])
+async def test_server_and_rate_limit_errors_do_trigger_fallback(status):
+    s = load_settings("config.yaml")
+    t = StatusTransport(status)
+    llm = Llm(s, transport=t)
+    r = await llm.complete("hi", model="openai/gpt-5.4")
+    assert r.provider == "anthropic" and llm.fallback_used is True

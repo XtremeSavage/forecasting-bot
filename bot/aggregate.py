@@ -87,9 +87,35 @@ def _cdf_to_percentiles(cdf: list[float], q: QuestionSummary, targets: list[int]
     # Clip each target into the achievable band first, then repair any remaining ties.
     lo_h, hi_h = float(cdf[0]), float(cdf[-1])
     out: dict[int, float] = {}
+    # Slopes of the first and last grid segments (x per unit of CDF), used to extend the
+    # piecewise-linear CDF past an OPEN bound. A target below cdf[0] means the ensemble
+    # puts that much mass below the lower bound; clipping it to the edge (the old
+    # behaviour) made the publish rebuild put a PMF spike at the bound that no member had.
+    # Linear extension keeps the in-range percentiles exact and the mass outside intact.
+    # The library is piecewise-linear in its 0..1 "cdf location" space (a log-scaled axis
+    # is mapped from there), so extend in location units and map back; that reproduces a
+    # member's own out-of-range percentile exactly on either axis type. Clamp to inside
+    # the library's hard tolerance (2x the range past a bound) so the result always builds.
+    dcdf_lo = float(cdf[1] - cdf[0]) if n > 1 else 0.0
+    dcdf_hi = float(cdf[-1] - cdf[-2]) if n > 1 else 0.0
+    dloc = 1.0 / (n - 1) if n > 1 else 0.0
+    span_lim = (q.upper_bound - q.lower_bound) * 1.9
+
+    def nominal(loc: float) -> float:
+        if q.zero_point is None:
+            return q.lower_bound + (q.upper_bound - q.lower_bound) * loc
+        ratio = (q.upper_bound - q.zero_point) / (q.lower_bound - q.zero_point)
+        return q.lower_bound + (q.upper_bound - q.lower_bound) * (ratio ** loc - 1) / (ratio - 1)
+
     for t in targets:
-        t_eff = min(max(t / 100, lo_h + 1e-6), hi_h - 1e-6)
-        out[t] = float(np.interp(t_eff, cdf, xs))
+        tt = t / 100
+        if tt < lo_h and q.open_lower and dcdf_lo > 0:
+            out[t] = max(float(nominal(-(lo_h - tt) / dcdf_lo * dloc)), q.lower_bound - span_lim)
+        elif tt > hi_h and q.open_upper and dcdf_hi > 0:
+            out[t] = min(float(nominal(1.0 + (tt - hi_h) / dcdf_hi * dloc)), q.upper_bound + span_lim)
+        else:
+            t_eff = min(max(tt, lo_h + 1e-6), hi_h - 1e-6)
+            out[t] = float(np.interp(t_eff, cdf, xs))
     span = float(xs[-1] - xs[0])
     if q.lower_bound is not None and q.upper_bound is not None:
         span = q.upper_bound - q.lower_bound

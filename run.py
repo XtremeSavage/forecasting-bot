@@ -74,10 +74,19 @@ async def _run(args) -> int:
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     sem = asyncio.Semaphore(s.limits.max_concurrent_questions)
     guards = 0
+    in_run_spend = 0.0
+    capped = False
 
     async def one(q):
-        nonlocal guards
+        nonlocal guards, in_run_spend, capped
         async with sem:
+            # The cap was read from disk once at startup; questions finishing during this
+            # run must count too, or a run at $495 of $500 spends a full batch past it.
+            if spent + in_run_spend >= s.limits.season_usd:
+                if not capped:
+                    log.error("SEASON_CAP reached mid-run: $%.2f on disk + $%.2f this run", spent, in_run_spend)
+                capped = True
+                return
             try:
                 # Hard per-question wall clock. Without it a single wedged provider call
                 # (or a pathological numeric distribution) blocks the whole run, and the
@@ -94,10 +103,13 @@ async def _run(args) -> int:
                 log.exception("forecast_question failed for post %s", getattr(q, "id_of_post", "?"))
                 guards += 1
                 return
+            in_run_spend += rec.cost_usd
             guards += len(rec.guards_fired)
             log.info("%s -> published=%s final=%s guards=%s cost=$%.2f", rec.question.url, rec.published, rec.final, rec.guards_fired, rec.cost_usd)
 
     await asyncio.gather(*(one(q) for q in questions))
+    if capped:
+        return 2
     return 1 if guards else 0
 
 

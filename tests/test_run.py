@@ -85,3 +85,32 @@ def test_limit_zero_means_zero(tmp_path):
     assert run.effective_limit(0, 15) == 0
     assert run.effective_limit(None, 15) == 15
     assert run.effective_limit(2, 15) == 2
+
+
+async def test_in_run_season_cap_stops_launching_questions(tmp_path, monkeypatch):
+    # The cap was checked once from disk before the run; a run could then spend well past it.
+    from bot.config import load_settings
+    from bot.models import ForecastRecord, QuestionSummary
+
+    s = load_settings("config.yaml")
+    s.limits.season_usd = 1.0
+    s.limits.max_concurrent_questions = 1
+    launched = []
+
+    async def cost_sixty_cents(q, *a, **k):
+        launched.append(q.id_of_question)
+        qs = QuestionSummary(post_id=q.id_of_post, question_id=q.id_of_question, url="u", title="t", kind="binary", close_time=None,
+                             options=None, lower_bound=None, upper_bound=None, open_lower=None, open_upper=None,
+                             cdf_size=None, zero_point=None, unit=None)
+        return ForecastRecord(question=qs, run_ts="2026-09-14T00:00:00+00:00", flags={}, cost_usd=0.6)
+
+    class Client:
+        def get_all_open_questions_from_tournament(self, t):
+            return [_qq(1, 11), _qq(2, 22), _qq(3, 33)]
+
+    monkeypatch.setattr(run, "load_settings", lambda path: s)
+    monkeypatch.setattr(run, "forecast_question", cost_sixty_cents)
+    monkeypatch.setattr(run, "MetaculusClient", Client)
+    code = await run._run(run.parse_args(["--mode", "dry", "--runs-dir", str(tmp_path)]))
+    assert launched == [11, 22]  # third would take the season past $1.00
+    assert code == 2

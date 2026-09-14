@@ -113,6 +113,14 @@ def extract_json(text: str) -> dict:
     raise LlmError("no JSON object found in model output")
 
 
+def _is_transient(e: Exception) -> bool:
+    """True for errors a second provider could plausibly succeed on."""
+    status = getattr(e, "status_code", None)
+    if isinstance(status, int):
+        return status == 429 or status >= 500
+    return True  # connection errors, timeouts, and anything without an HTTP status
+
+
 class Llm:
     def __init__(self, settings: Settings, transport: Transport | None = None) -> None:
         self.s = settings
@@ -142,6 +150,11 @@ class Llm:
             # an anthropic/* model can be reissued against the same model directly; any
             # other model has no direct route, so fall back to the configured Anthropic
             # model instead of losing the question. A degraded forecast beats none.
+            # But only for outages and overload: a 4xx (no credits, unknown model slug,
+            # prompt too long) is our problem, and routing it to the fallback would hide
+            # it and, with a key present, quietly turn every member into the fallback model.
+            if not _is_transient(e):
+                raise LlmError(f"openrouter rejected {model}: {type(e).__name__}: {e}") from e
             direct = self._anthropic_direct_name(model) or self.fallback_model
             self.fallback_used = True
             try:

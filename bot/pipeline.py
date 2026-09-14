@@ -68,10 +68,20 @@ def _stage(rec: ForecastRecord, name: str, model: str, cost: float, t0: float) -
     rec.cost_usd += cost
 
 
+SOFT_WALL_FRACTION = 0.8
+
+
+def make_budget(settings: Settings) -> Budget:
+    # run.py enforces limits.question_wall_clock_s as a hard asyncio timeout. The soft
+    # budget must sit inside it, or its "publish the pre-DA aggregate" path can never
+    # fire on the time axis: the hard timeout would always win first.
+    return Budget(settings.limits.question_wall_clock_s * SOFT_WALL_FRACTION, settings.limits.per_question_usd)
+
+
 async def forecast_question(q: MetaculusQuestion, settings: Settings, llm: Llm, publisher: Publisher | None, today: str, runs_dir: str = "runs") -> ForecastRecord:
     qs = records.question_summary(q)
     rec = ForecastRecord(question=qs, run_ts=datetime.now(timezone.utc).isoformat(), flags=settings.stages.model_dump())
-    budget = Budget(settings.limits.question_wall_clock_s, settings.limits.per_question_usd)
+    budget = make_budget(settings)
     desc, crit, fine = q.background_info or "", q.resolution_criteria or "", q.fine_print or ""
     cost0 = getattr(llm, "total_cost_usd", 0.0)
     fb0 = getattr(llm, "fallback_used", False)
@@ -230,6 +240,13 @@ async def forecast_question(q: MetaculusQuestion, settings: Settings, llm: Llm, 
             return rec
         rec.published = True
         return rec
+    except asyncio.CancelledError:
+        # run.py's wait_for cancels us on the hard wall clock. CancelledError is a
+        # BaseException, so without this the record written below would show no guard
+        # and no error, and the timeout would be invisible everywhere but the log.
+        rec.error = f"QUESTION_TIMEOUT after {settings.limits.question_wall_clock_s}s"
+        rec.guards_fired.append("QUESTION_TIMEOUT")
+        raise
     except Exception as e:  # noqa: BLE001
         log.exception("pipeline error on %s", qs.url)
         rec.error = f"{type(e).__name__}: {e}"

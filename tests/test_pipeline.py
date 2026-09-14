@@ -477,3 +477,36 @@ def test_publisher_is_open_handles_group_subquestions():
     assert pub.is_open(5, question_id=6)
     assert not pub.is_open(5, question_id=7)
     assert not pub.is_open(5, question_id=99)  # subquestion vanished: do not publish
+
+
+async def test_timed_out_question_record_carries_a_guard(tmp_path, monkeypatch):
+    # asyncio.wait_for cancellation is a BaseException, so it skipped every `except
+    # Exception`: the finally wrote a record with guards=[] and error=None, and nothing in
+    # the file said the question timed out.
+    import asyncio
+    from forecasting_tools import BinaryQuestion
+    from bot.config import load_settings
+    from bot.llm import Llm
+    from tests.test_llm import FakeTransport
+
+    async def wedged(*a, **k):
+        await asyncio.sleep(30)
+
+    monkeypatch.setattr(pipeline.forensics, "run", wedged)
+    s = load_settings("config.yaml")
+    q = BinaryQuestion(question_text="t", id_of_post=5, id_of_question=6, page_url="https://m/5", close_time=None)
+    with pytest.raises(asyncio.TimeoutError):
+        await asyncio.wait_for(pipeline.forecast_question(q, s, Llm(s, FakeTransport()), None, "2026-09-14", str(tmp_path)), timeout=0.05)
+    recs = list(tmp_path.glob("**/*.json"))
+    assert len(recs) == 1
+    body = json.loads(recs[0].read_text(encoding="utf-8"))
+    assert "QUESTION_TIMEOUT" in body["guards_fired"]
+    assert body["published"] is False
+
+
+def test_budget_soft_wall_fires_before_hard_timeout():
+    from bot.config import load_settings
+    from bot.guards import Budget
+    s = load_settings("config.yaml")
+    b = pipeline.make_budget(s)
+    assert b.wall < s.limits.question_wall_clock_s

@@ -92,7 +92,9 @@ def test_open_bounds_with_zero_point_round_trip():
     out = aggregate_numeric([m, m, m], q, PCTS)
     vals = [out[k] for k in sorted(out)]
     assert all(b > a for a, b in zip(vals, vals[1:])), vals
-    assert 1.0 <= vals[0] and vals[-1] <= 1000.0  # interpolation stays on the question's axis
+    # Open bounds: the member's own out-of-range p95 must come back, not be clipped to 1000.
+    assert out[95] == pytest.approx(1500.0, rel=0.02)
+    assert out[5] == pytest.approx(2.0, abs=0.05)
     cdf = percentiles_to_cdf(out, q)
     assert len(cdf) == 201
     assert all(b >= a for a, b in zip(cdf, cdf[1:]))
@@ -135,3 +137,20 @@ def test_numeric_aggregate_does_not_prestandardize_tails():
     out = aggregate_numeric([m, m, m, m], q, sorted(m))
     for k, v in m.items():
         assert out[k] == pytest.approx(v, abs=0.02), f"p{k}: {out[k]} vs member {v}"
+
+
+
+def test_open_lower_bound_mass_is_not_teleported_to_the_edge():
+    # Members may legitimately put low percentiles below an OPEN lower bound. Reading the
+    # median CDF back clipped those targets to the bound edge, which the publish rebuild
+    # turned into a single-bucket PMF spike at the bound that no member produced.
+    q = _q(lo=0.0, hi=100.0, open_lo=True, open_hi=False)
+    m = {5: -40.0, 10: -20.0, 20: -5.0, 40: 10.0, 60: 30.0, 80: 60.0, 90: 80.0, 95: 90.0}
+    out = aggregate_numeric([m, m, m], q, PCTS)
+    assert out[5] < out[10] < out[20] < 0 < out[40]
+    for k in (40, 60, 80, 90, 95):
+        assert out[k] == pytest.approx(m[k], abs=0.05)
+    direct = percentiles_to_cdf(m, q)
+    rebuilt = percentiles_to_cdf(out, q)
+    assert rebuilt[0] == pytest.approx(direct[0], abs=0.02)          # same mass below the bound
+    assert rebuilt[1] - rebuilt[0] < 0.02                              # no spike in the first bucket

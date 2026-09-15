@@ -2,7 +2,7 @@
 
 This folder (`~/projects/forecasting-bot`) is the only copy.
 
-Read `docs/HANDOFF.md` first: it says exactly where the build stands and what to do next. Then `README.md` for goals, rules, and open items. `docs/RESEARCH.md` holds the tournament research. The spec and plan are under `docs/superpowers/`..
+Read `docs/HANDOFF.md` first: it says exactly where the build stands and what to do next. Then `README.md` for goals, rules, and open items. `docs/RESEARCH.md` holds the tournament research. The spec and plan are under `docs/superpowers/`. XtremeSavageXD's working preferences live outside the repo in `~/.claude/CLAUDE.md`.
 
 Current status lives at the top of `docs/HANDOFF.md`; do not duplicate it here. Autonomy level for this project is C: free rein on code and local files; confirm before spending money, sending messages, or the first submission to a live tournament. XtremeSavageXD pays for OpenRouter out of pocket while the Metaculus credit request is pending, so mention the cost of any paid run before starting it.
 

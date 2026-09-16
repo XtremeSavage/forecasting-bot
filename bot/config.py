@@ -44,6 +44,7 @@ class ForecastCfg(BaseModel):
     da_max_logit_shift: float = 0.5
     da_max_numeric_fraction: float = 0.25
     numeric_percentiles: list[int] = [5, 10, 20, 40, 60, 80, 90, 95]
+    members_see_blind: bool = True
 
 
 class ResearchCfg(BaseModel):

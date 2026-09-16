@@ -60,6 +60,29 @@ def test_forecast_prompt_includes_blind_and_evidence():
     assert "reference class" in p.lower() and "B2" in p and "status quo" in p.lower() and "FINAL:" in p
 
 
+def test_forecast_prompt_default_includes_blind():
+    s = load_settings("config.yaml")
+    f = Forensics.model_validate(json.loads((FIX / "forensics_binary.json").read_text()))
+    b = BlindEstimate(reference_class="rc", base_rate_reasoning="br", forecast=ForecastValue(kind="binary", probability=0.2))
+    e = EvidenceTable(items=[Evidence(claim="c", source="s", reliability="B", credibility=2, supports="Yes")])
+    p = forecast.build_prompt(_q(), "d", "c", "f", f, b, e, "2026-09-12", s.forecast.numeric_percentiles, members_see_blind=True)
+    assert "Blind estimate:" in p
+    assert "Start from the blind base rate" in p
+
+
+def test_forecast_prompt_withholds_blind_when_disabled():
+    s = load_settings("config.yaml")
+    f = Forensics.model_validate(json.loads((FIX / "forensics_binary.json").read_text()))
+    b = BlindEstimate(reference_class="rc", base_rate_reasoning="br", forecast=ForecastValue(kind="binary", probability=0.2))
+    e = EvidenceTable(items=[Evidence(claim="c", source="s", reliability="B", credibility=2, supports="Yes")])
+    p = forecast.build_prompt(_q(), "d", "c", "f", f, b, e, "2026-09-12", s.forecast.numeric_percentiles, members_see_blind=False)
+    assert "(withheld for this run: form your own reference class and base rate before weighing the evidence)" in p
+    assert "Reference class: rc" not in p
+    assert "Base-rate reasoning: br" not in p
+    assert "Blind estimate:" not in p
+    assert "State your own reference class" in p
+
+
 def test_evidence_prompt_lists_sources():
     f = Forensics.model_validate(json.loads((FIX / "forensics_binary.json").read_text()))
     bundle = ResearchBundle(sources=[RawSource(provider="asknews", url="http://a", title="T", published="2026-09-10", text="body")])

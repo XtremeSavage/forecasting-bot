@@ -9,6 +9,7 @@ def test_load_settings_defaults():
     assert len(s.models.members) == 4
     assert s.models.members[0].model == "openai/gpt-5.4"
     assert s.forecast.p_min == 0.01
+    assert s.forecast.members_see_blind is True
     assert s.tournaments.fall == 33121
 
 

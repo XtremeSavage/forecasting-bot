@@ -12,6 +12,7 @@ def test_profile_loads_and_is_runnable(path):
     assert s.limits.per_call_usd <= s.limits.per_question_usd <= s.limits.season_usd
     assert s.tournaments.fall == 33121
     assert s.tournaments.test == "bot-testing-area"
+    assert s.forecast.members_see_blind is True
 
 
 def test_lean_is_cheaper_than_default():

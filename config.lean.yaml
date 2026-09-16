@@ -41,6 +41,7 @@ forecast:
   da_max_logit_shift: 0.5
   da_max_numeric_fraction: 0.25
   numeric_percentiles: [5, 10, 20, 40, 60, 80, 90, 95]
+  members_see_blind: true
 
 research:
   asknews_enabled: true

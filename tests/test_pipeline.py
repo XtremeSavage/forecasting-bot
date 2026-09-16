@@ -67,6 +67,16 @@ async def test_full_binary_run_with_bounded_da(tmp_path):
     assert rec.final.probability < 0.45 and rec.final.probability > pre
     assert rec.error is None and rec.cost_usd > 0
     assert list(Path(tmp_path).glob("**/5_*.json"))
+    assert rec.flags["members_see_blind"] is True
+
+
+async def test_record_flags_carry_members_see_blind_setting(tmp_path):
+    s = load_settings("config.yaml")
+    s.research.asknews_enabled = s.research.web_search_enabled = s.research.resolution_fetch_enabled = False
+    s.forecast.members_see_blind = False
+    texts = [FOR, BLIND, EVID, member(0.2), member(0.3), member(0.25), member(0.22), CRIT, REV]
+    rec = await pipeline.forecast_question(_bq(), s, FakeLlm(texts), FakePublisher(), "2026-09-12", runs_dir=str(tmp_path))
+    assert rec.flags["members_see_blind"] is False
 
 
 async def test_skip_when_too_few_members(tmp_path):

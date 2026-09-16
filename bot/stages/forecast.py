@@ -17,10 +17,16 @@ def _fmt_value(v: ForecastValue) -> str:
 
 
 def build_prompt(q, description, criteria, fine_print, forensics: Forensics, blind: BlindEstimate | None,
-                 evidence: EvidenceTable | None, today: str, percentiles: list[int]) -> str:
+                 evidence: EvidenceTable | None, today: str, percentiles: list[int],
+                 members_see_blind: bool = True) -> str:
     blind_txt = "(blind base rate stage disabled)"
     if blind:
         blind_txt = f"Reference class: {blind.reference_class}\nBase-rate reasoning: {blind.base_rate_reasoning}\nBlind estimate: {_fmt_value(blind.forecast)}"
+    if not members_see_blind:
+        blind_txt = "(withheld for this run: form your own reference class and base rate before weighing the evidence)"
+    ach_step4 = "4. Start from the blind base rate and update on the evidence. Say how far you moved and why."
+    if not members_see_blind:
+        ach_step4 = "4. State your own reference class and base rate, then update on the evidence. Say how far you moved and why."
     ev_txt = "(evidence table stage disabled)"
     if evidence:
         rows = [f"E{i} [{e.reliability}{e.credibility}] ({e.date or 'n/d'}) supports {e.supports}: {e.claim} — {e.source}" for i, e in enumerate(evidence.items, 1)]
@@ -46,7 +52,7 @@ Apply analysis of competing hypotheses:
 1. List the hypotheses. H0 is the status quo outcome. Others are the alternatives (each option, or higher/lower ranges).
 2. For each evidence item, say which hypotheses it is consistent with and which it contradicts. Weight by grade: A1-B2 evidence dominates; D-F or 4-6 barely moves you.
 3. State what must change between today and close for a non-status-quo outcome, and how likely that is in the time left.
-4. Start from the blind base rate and update on the evidence. Say how far you moved and why.
+{ach_step4}
 5. Give the forecast. Do not exceed 0.95 or go below 0.05 unless A1/A2 evidence makes the outcome near-certain.
 
 Write one line "FINAL: <number>" giving the headline number (the Yes probability, the top option's probability, or your median), then
@@ -67,7 +73,8 @@ def parse(text: str, q: QuestionSummary) -> tuple[ForecastValue, float | None]:
 
 
 async def run_member(llm: Llm, settings: Settings, member: Member, q, description, criteria, fine_print, forensics, blind, evidence, today) -> MemberForecast:
-    prompt = build_prompt(q, description, criteria, fine_print, forensics, blind, evidence, today, settings.forecast.numeric_percentiles)
+    prompt = build_prompt(q, description, criteria, fine_print, forensics, blind, evidence, today, settings.forecast.numeric_percentiles,
+                          members_see_blind=settings.forecast.members_see_blind)
     res = await llm.complete(prompt, member.model, temperature=member.temperature, system=SYSTEM, max_tokens=5000)
     try:
         value, stated = parse(res.text, q)

@@ -80,7 +80,9 @@ def make_budget(settings: Settings) -> Budget:
 
 async def forecast_question(q: MetaculusQuestion, settings: Settings, llm: Llm, publisher: Publisher | None, today: str, runs_dir: str = "runs") -> ForecastRecord:
     qs = records.question_summary(q)
-    rec = ForecastRecord(question=qs, run_ts=datetime.now(timezone.utc).isoformat(), flags=settings.stages.model_dump())
+    rec_flags = settings.stages.model_dump()
+    rec_flags["members_see_blind"] = settings.forecast.members_see_blind
+    rec = ForecastRecord(question=qs, run_ts=datetime.now(timezone.utc).isoformat(), flags=rec_flags)
     budget = make_budget(settings)
     desc, crit, fine = q.background_info or "", q.resolution_criteria or "", q.fine_print or ""
     cost0 = getattr(llm, "total_cost_usd", 0.0)

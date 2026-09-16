@@ -43,6 +43,8 @@ Local (Python 3.12 venv at `.venv`):
 
 Two cost profiles ship: `config.yaml` (default, ~$0.40/question) and `config.lean.yaml` (~$0.12-0.15/question, two ensemble members, mini model for the support stages). On GitHub, set the repository variable `BOT_CONFIG` to `config.lean.yaml` to switch; unset means default.
 
+Experiment flag: `forecast.members_see_blind` (default `true`). Set to `false` to withhold the blind base-rate stage's output from the ensemble members; the stage still runs and is recorded. Added 2026-09-16 for the second MiniBench round; see `docs/HANDOFF.md` step 8b.
+
 Scheduled runs are off until the repo variable `BOT_LIVE` is `true` (Settings, Secrets and variables, Actions, Variables). Until then only manual `Run workflow` dispatches do anything.
 
 GitHub Actions: `Main bot on tournament` every 20 min (Fall + MiniBench), `Main bot on Metaculus Cup` every 2 days, `Control bot` workflows on the same cadence with the control token, `Test bot` manual. Records land in `runs/YYYY-MM-DD/` and are committed automatically.
